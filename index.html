@@ -4,12 +4,53 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sound Machine</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <button id="btn-alarm">⏰ アラーム</button>
-    <button id="btn-push">☎️電話</button>
-    <button id="btn-bell">🛎️鈴の音</button>
-    <button id="btn-timer">⌛️３秒タイマー</button>
+    <div class="header">アラーム</div>
+    <div class="section-title">🛌睡眠｜起床</div>
+    <div class="alarm-list sleep-list">
+        <div class="alarm-item">
+            <div class="alarm-left">
+                <div class="alarm-time">
+                    <input type="time" class="alarm-time" id="" value="06:30">
+                </div>
+                <div class="alarm-label">明日の朝</div>
+            </div>
+            <button id="btn-timer" class="ios-btn-change">変更</button>
+        </div>
+    </div>
+    <div class="section-title">その他</div>
+    <div class="alarm-list">
+        <div class="alarm-item">
+            <div class="alarm-left">
+                <div class="alarm-time">
+                    <input type="time" class="alarm-time" id="input-alarm-time" value="07:00">
+                    </div>
+                <div class="alarm-label">アラーム</div>
+            </div>
+            <button id="btn-alarm" class="ios-switch"></button>
+        </div>
+        <div class="alarm-item">
+            <div class="alarm-left">
+                <div class="alarm-time">
+                    <input type="time" class="alarm-time" id="input-push-time" value="08:00">
+                </div>
+                <div class="alarm-label">☎️電話音</div>
+            </div>
+            <button id="btn-push" class="ios-switch"></button>
+        </div>
+        <div class="alarm-item">
+            <div class="alarm-left">
+                <div class="alarm-time">
+                    <input type="time" class="alarm-time" id="input-bell-time" value="09:00">
+                </div>
+                <div class="alarm-label">🔔鈴の音</div>
+            </div>
+            <button id="btn-bell" class="ios-switch"></button>
+        </div>
+    </div>
+
     <audio id="sound-alarm" src="https://actions.google.com/sounds/v1/alarms/digital_watch_alarm_long.ogg"></audio>
     <audio id="sound-push" src="https://www.springin.org/wp-content/uploads/2022/09/%E3%83%95%E3%82%9A%E3%83%83%E3%82%B7%E3%83%A5%E9%9F%B3.mp3"></audio>
     <audio id="sound-bell" src="https://www.springin.org/wp-content/uploads/2022/07/%E9%88%B4.mp3"></audio>

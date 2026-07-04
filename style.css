@@ -1,0 +1,142 @@
+/* 画面全体の背景をiPhoneと同じ「漆黒」にする */
+body {
+    background-color: #000000;
+    color: #ffffff;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display, san-serif";
+    margin: 0;
+    padding: 0 16px;
+}
+
+/* 「アラーム」の大きなタイトル */
+.header {
+    font-size: 34px;
+    font-weight: bold;
+    margin-top: 50px;
+    margin-bottom: 20px;
+}
+
+/* 「🛌睡眠｜起床」「その他」の見出し */
+.section-title {
+    font-size: 14px;
+    color: #8e8e93;
+    font-weight: bold;
+    margin-top: 25px;
+    margin-bottom: 8px;
+}
+
+/* リスト全体の区切り */
+.alarm-list {
+    border-top: 0.5px solid #2c2c2e;
+}
+
+/* 1行ごとのレイアウト */
+.alarm-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 0.5px solid #2c2c2e;
+}
+
+/* 時間とラベル（左側）の縦並び */
+.alarm-left {
+    display: flex;
+    flex-direction: column;
+}
+
+/* 時間の数字（iPhone独特の細くて大きな美しい数字） */
+.alarm-time {
+    font-size: 48px;
+    font-weight: 300;
+    line-height: 1.1;
+    color: #8e8e93;
+}
+
+/* 睡眠エリアの時間だけは「常にON」なので、最初から絶対に白にする */
+.sleep-list .alarm-time {
+    color: #ffffff !important;
+}
+
+/* スイッチがON（緑）になったら、その行の数字もパッと白くする連動設定 */
+.alarm-item:has(.ios-switch[style*="background-color: pink"]) .alarm-time,
+.alarm-item:has(.ios-switch[style*="background-color: red"]) .alarm-time,
+.alarm-item:has(.ios-switch[style*="background-color: yellow"]) .alarm-time {
+    color: #ffffff !important;
+}
+
+/* 「アラーム」「明日の朝」の文字 */
+.alarm-label {
+    font-size: 14px;
+    color: #8e8e93;
+    margin-top: 2px;
+}
+
+/* 【変更ボタン】長方形の角丸（横長）、文字色オレンジ */
+.ios-btn-change {
+    background-color: #1c1c1e; /* グレーの背景 */
+    color: #ff9f0a; /* オレンジ色の文字 */
+    border: none;
+    padding: 6px 16px; /* 横長になるように余白を調整 */
+    border-radius: 14px; /* 長方形の角丸 */
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+
+}
+
+/* iPhone風トグルスイッチの見た目を作る */
+.ios-switch {
+    position: relative;
+    width: 51px;
+    height: 31px;
+    background-color: #3a3a3c; /* OFFの時のグレー */
+    border-radius: 16px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.25s;
+    padding: 0;
+}
+
+/* スイッチの中の白い丸ポチ */
+.ios-switch::after {
+    content: "";
+    position: absolute;
+    width: 27px;
+    height: 27px;
+    border-radius: 50%;
+    background-color: #ffffff;
+    top: 2px;
+    left: 2px;
+    transition: transform 0.2s ease-in-out;
+    box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* JavaScriptで色がピンク（ON状態）になった時のiPhone風緑色への変身 */
+.ios-switch[style*="background-color: pink"],
+.ios-switch[style*="background-color: red"],
+.ios-switch[style*="background-color: yellow"] {
+    background-color: #34c759 !important; /* iOSの鮮やかな緑 */
+}
+
+.ios-switch[style*="background-color"]::after {
+    transform: translateX(20px);
+}
+
+/* 時間入力欄（input）の白背景と枠線を消して、iPhoneの文字風にする */
+input[type="time"].alarm-time {
+    background: none;
+    border: none;
+    color: inherit;
+    font-family: inherit;
+    font-size: 48px;
+    font-weight: 300;
+    padding: 0;
+    margin: 0;
+    outline: none;
+    -webkit-appearance: none;
+}
+
+/* パソコンやスマホのブラウザが勝手に出す「時計マーク」を非表示にする */
+input[type="time"]::-webkit-calendar-picker-indicator {
+    display: none !important;
+}
