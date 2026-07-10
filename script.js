@@ -170,82 +170,25 @@ window.addEventListener("keyup", function (event) {
     }
 })
 
-// const btnTimer = document.querySelector("#btn-timer");
-// btnTimer.addEventListener("click", function() {
-//   // わかりやすいようにボタンの文字を「セット中」に変える
-//     btnTimer.textContent = "⌛️セット中．．．";
+// 使う部品をHTMLから持ってくる
+const btnAddHeader = document.querySelector(".plus-btn"); // 右上の「＋」ボタン
+const addModal = document.querySelector("#add-modal");
+const btnModalCancel = document.querySelector("#btn-modal-cancel");
+const btnModalCheck = document.querySelector("#btn-modal-check");
+const newAlarmTime = document.querySelector("#new-alarm-time");
 
-//   // 3秒(3000ミリ秒)後に中の関数を実行する
-//     setTimeout(function (event) {
-//         // 3秒経ったら鈴の音（soundBell）を鳴らす
-//         soundBell.currentTime = 0;
-//         soundBell.play();
+// 1. 「＋」ボタンが押されたら、追加画面を表示する
+btnAddHeader.addEventListener("click", function () {
+    addModal.classList.add("show");
+});
 
-//         // 音が鳴ったらボタンの文字を元に戻す
-//         btnTimer.textContent = "⌛️ 3秒タイマー";
-//   }, 3000); // ミリ秒単位で指定（3000 = 3秒）
-// });
+// 2. 「キャンセル」ボタンが押されたら追加画面を閉じる
+btnModalCancel.addEventListener("click", function () {
+  addModal.classList.remove("show");
+});
 
-// // カウントダウン
-// const btnTimer = document.querySelector("btn-timer");
-// btnTimer.addEventListener("click", function () {
-//     // 残り秒数を３秒にセット
-//     let count = 3;
-
-//     // 最初にリモコンの文字を「⏳ ３」にする
-//     btnTimer.textContent = `⏳ ${count}`;
-
-//     // 1秒（1000ミリ秒）ごとに、中の関数をずっと繰り返すタイマーを起動
-//     const timerId = setInterval(function () {
-//         // カウントを1減らす（3から2、2から1へ）
-//         count--;
-
-//         // まだ秒数があるなら
-//         if (count > 0) {
-//             // ボタンの文字を更新する
-//             btnTimer.textContent = `⏳ ${count}`;
-//         } else {
-//             // 0秒になったら、繰り返しタイマーを完全にストップする
-//             clearInterval(timerId);
-
-//             // 鈴の音を鳴らす
-//             soundBell.currentTime = 0;
-//             soundBell.play();
-
-//             // ボタンの文字を元に戻す
-//             btnTimer.textContent = "⏳ 3秒タイマー";
-//         }
-//     }, 1000); // 1000ミリ秒 = 1秒ごと
-// });
-
-// const btnTimer = document.querySelector("#btn-timer");
-
-// btnTimer.addEventListener("click", function () {
-//     // 残り秒数を3秒にセット
-//     let count = 3;
-
-//     // 最初のリモコンの文字を「⏳ 3」にする
-//     btnTimer.textContent = `⏳ ${count}`;
-
-//     // 1秒（1000ミリ秒）ごとに、中の関数をずっと繰り返すタイマーを起動
-//     const timerId = setInterval(function () {
-//         // カウントを1減らす（3から2、2から1へ）
-//         count--;
-
-//         // まだ秒数があるなら
-//         if (count > 0) {
-//             // ボタンの文字を更新する
-//             btnTimer.textContent = `⏳ ${count}`;
-//         } else {
-//             // 0秒になったら、繰り返しタイマーを完全にストップする
-//             clearInterval(timerId);
-
-//             // 鈴の音を鳴らす
-//             soundBell.currentTime = 0;
-//             soundBell.play();
-
-//             // ボタンの文字を元に戻す
-//             btnTimer.textContent = "⏳ 3秒タイマー";
-//         }
-//     }, 1000); // 1000ミリ秒ごと ＝ 1秒ごと
-// })
+// 3. 「確認」ボタンが押された時の処理
+btnModalCheck.addEventListener("click", function () {
+    // 画面を閉じる
+    addModal.classList.remove("show");
+});

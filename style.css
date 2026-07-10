@@ -161,3 +161,86 @@ input[type="time"].alarm-time {
 input[type="time"]::-webkit-calendar-picker-indicator {
     display: none !important;
 }
+
+/* ポップアップ全体の背景（画面全体を少し暗くする） */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease;
+}
+
+/* クラス「show」がついたら画面に表示する */
+.modal-overlay.show {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* ポップアップの中身の白いボックス（iPhoneのダークモード風グレー） */
+.modal-content {
+    background-color: #2c2c2e;
+    width: 280px;
+    padding: 20px;
+    border-radius: 14px;
+    text-align: center;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+}
+
+.modal-header {
+    margin-top: 0;
+    font-size: 17px;
+    color: #ffffff;
+}
+
+/* ポップアップ内の時間入力欄を大きく見やすく */
+#new-alarm-time {
+    background-color: #1c1c1e;
+    border: none;
+    color: #ffffff;
+    font-size: 32px;
+    padding: 10px 20px;
+    border-radius: 8px;
+    margin: 15px 0;
+    text-align: center;
+    outline: none;
+}
+
+/* ボタンの並び（横並び） */
+.modal-buttons {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+/* ボタン共通設定 */
+.modal-btn {
+    flex: 1;
+    border: none;
+    padding: 10px;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+/* キャンセルボタンはグレー */
+.modal-btn.cancel {
+    background-color: #3a3a3c;
+    color: #ffffff;
+}
+
+/* 確認ボタンはiOSオレンジ */
+.modal-btn.check {
+    background-color: #ff9f0a;
+    color: #ffffff;
+}

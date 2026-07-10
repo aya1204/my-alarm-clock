@@ -9,7 +9,7 @@
 <body>
     <div class="ios-header">
         <button class="header-btn">編集</button>
-        <button class="header-btn">＋</button>
+        <button class="header-btn plus-btn">＋</button>
     </div>
     <h1 class="header-title">アラーム</h1>
     <div class="section-title">🛌睡眠｜起床</div>
@@ -58,6 +58,17 @@
     <audio id="sound-alarm" src="https://actions.google.com/sounds/v1/alarms/digital_watch_alarm_long.ogg"></audio>
     <audio id="sound-push" src="https://www.springin.org/wp-content/uploads/2022/09/%E3%83%95%E3%82%9A%E3%83%83%E3%82%B7%E3%83%A5%E9%9F%B3.mp3"></audio>
     <audio id="sound-bell" src="https://www.springin.org/wp-content/uploads/2022/07/%E9%88%B4.mp3"></audio>
-    <script src="script.js"></script>
+    <!-- アラーム追加用のポップアップ画面（最初は隠れている） -->
+     <div id="add-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button id="btn-modal-cancel" class="modal-btn cancel">×</button>
+                <p class="modal-header-title">アラームを追加</p>
+                <button id="btn-modal-check" class="modal-btn check">✔︎</button>
+            </div>
+            <input type="time" id="new-alarm-time" value="09:00">
+        </div>
+     </div>
+     <script src="script.js"></script>
 </body>
 </html>
