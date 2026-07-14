@@ -192,3 +192,119 @@ btnModalCheck.addEventListener("click", function () {
     // 画面を閉じる
     addModal.classList.remove("show");
 });
+
+// // 🔁繰り返し設定の連動システム
+// const newAlarmRepeat = document.querySelector("#new-alarm-repeat");
+
+// // ⭕️記憶を入れておく箱を１つだけ用意する（再代入するので必ずletにする）
+//     let lastSelectedValue = "none";
+
+
+// // ユーザーが選択を変えたときの処理
+// newAlarmRepeat.addEventListener("change", function () {
+//     const currentValue = newAlarmRepeat.value;
+
+//     // ❌もし「今、選んだ曜日」が「直前と同じ曜日」なら選択を解除して「しない」に戻す
+//     if (currentValue === lastSelectedValue) {
+//         newAlarmRepeat.value = "none"; // 「しない」を選択状態にする
+//         lastSelectedValue = "none";
+//     } else {
+//         // 違う曜日が選ばれたら、それを新しい記憶にする
+//         lastSelectedValue = currentValue;
+//     }
+// });
+
+// // 🔁繰り返し設定の連動システム（自作セレクト完全トグル版）
+// const selectTrigger = document.querySelector("#repeat-select-trigger");
+// const optionsList = document.querySelector("#repeat-options-list");
+// const optionItems = document.querySelectorAll("#repeat-options-list li");
+
+// // 内部的に選択されている値を保存する変数（最初は「しない」なので "none"）
+// let currentSelectedValue = "none";
+
+// // 1. 右側の文字（トリガー）をクリックしたら、選択肢リストを開閉する
+// selectTrigger.addEventListener("click", function (event) {
+//     event.stopPropagation(); // 画面クリックにイベントが流れるのを防ぐ
+//     optionsList.classList.toggle("show");
+// });
+
+// // 2. 曜日リストの中の、どれかがクリックされた時の処理
+// optionItems.forEach(function (item) {
+//     item.addEventListener("click", function (event) {
+//         event.stopPropagation();
+        
+//         const clickedValue = item.getAttribute("data-value"); // クリックされた曜日
+//         const clickedText = item.textContent;                // 「毎月曜日」などの文字
+
+//         // ❌ もしクリックした曜日が、すでに選ばれている曜日と「全く同じ」なら解除！
+//         if (clickedValue === currentSelectedValue) {
+//             selectTrigger.textContent = "しない";
+//             currentSelectedValue = "none";
+//             item.classList.remove("selected"); // チェック模様を消す
+//         } else {
+//             // ⭕️ 違う曜日が選ばれたら、その曜日を表示して記憶する
+//             selectTrigger.textContent = clickedText;
+//             currentSelectedValue = clickedValue;
+            
+//             // 他の曜日の選択色を消して、今選んだ曜日だけに色をつける
+//             optionItems.forEach(i => i.classList.remove("selected"));
+//             item.classList.add("selected");
+//         }
+
+//         // 選び終わったらリストを閉じる
+//         optionsList.classList.remove("show");
+//     });
+// });
+
+// // 3. 選択肢が開いている時に、画面の他の場所をクリックしたらリストを閉じる（親切設計）
+// document.addEventListener("click", function (event) {
+//     if (optionsList && !optionsList.contains(event.target) && event.target !== selectTrigger) {
+//         optionsList.classList.remove("show");
+//     }
+// });
+
+// 🔁繰り返し設定の連動システム（同じ画面サイズ・全画面トグル版）
+const repeatTrigger = document.querySelector("#repeat-select-trigger");
+const repeatModal = document.querySelector("#repeat-modal");
+const btnRepeatBack = document.querySelector("#btn-repeat-back");
+const repeatOptionItems = document.querySelectorAll("#repeat-options-list li");
+
+// 1. 「繰り返し」の行をクリックしたら、同じサイズで専用画面をパッと開く
+if (repeatTrigger && repeatModal) {
+    repeatTrigger.addEventListener("click", function () {
+        repeatModal.classList.add("show");
+    });
+}
+
+// 2. 曜日リストの中の、どれかがクリックされたときの処理（ここでは画面を閉じない）
+repeatOptionItems.forEach(function (item) {
+    item.addEventListener("click", function () {
+        // もしすでに選ばれている（selectedクラスがある）なら、クラスを消す（選択解除）
+        if (item.classList.contains("selected")) {
+            item.classList.remove("selected");
+        } else {
+            // まだ選ばれていないなら、他の曜日の選択を全部消してから、新しく選択状態にする
+            repeatOptionItems.forEach((i) => i.classList.remove("selected"));
+            item.classList.add("selected");
+        }
+    });
+});
+
+// 3. 専用画面の「＜ 戻る」ボタンを押したら値を保存して閉じる
+if (btnRepeatBack && repeatModal) {
+    btnRepeatBack.addEventListener("click", function () {
+
+        // 現在チェック（selected）がついている曜日があるか探す
+        const selectedItem = document.querySelector("#repeat-options-list li.selected");
+
+        if (selectedItem) {
+            // もしチェックが付いている曜日があればその文字（例：毎月曜日）を元の画面に表示する
+            repeatTrigger.textContent = selectedItem.textContent;
+        } else {
+            // もし何もチェックがついていなければ（解除されていたら）「しない」にする
+            repeatTrigger.textContent = "しない" ;
+        }
+        // 最後に、繰り返し画面を閉じて元の画面に戻る
+        repeatModal.classList.remove("show");
+    });
+}

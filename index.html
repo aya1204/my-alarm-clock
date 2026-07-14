@@ -58,17 +58,86 @@
     <audio id="sound-alarm" src="https://actions.google.com/sounds/v1/alarms/digital_watch_alarm_long.ogg"></audio>
     <audio id="sound-push" src="https://www.springin.org/wp-content/uploads/2022/09/%E3%83%95%E3%82%9A%E3%83%83%E3%82%B7%E3%83%A5%E9%9F%B3.mp3"></audio>
     <audio id="sound-bell" src="https://www.springin.org/wp-content/uploads/2022/07/%E9%88%B4.mp3"></audio>
+
     <!-- アラーム追加用のポップアップ画面（最初は隠れている） -->
-     <div id="add-modal" class="modal-overlay">
+    <div id="add-modal" class="modal-overlay">
         <div class="modal-content">
+            <!-- ヘッダー（キャンセルと「アラームを追加」、保存） -->
             <div class="modal-header">
                 <button id="btn-modal-cancel" class="modal-btn cancel">×</button>
                 <p class="modal-header-title">アラームを追加</p>
                 <button id="btn-modal-check" class="modal-btn check">✔︎</button>
             </div>
-            <input type="time" id="new-alarm-time" value="09:00">
+
+            <!-- 1. 時間選択 -->
+            <div class="modal-time-picker">
+                <input type="time" id="new-alarm-time" value="09:00">
+            </div>
+
+            <!-- 2. 設定リストエリア -->
+            <div class="modal-settingss-list">
+
+                <!-- 繰り返し設定 -->
+                <div class="modal-setting-item">
+                    <span class="setting-label">繰り返し</span>
+                    <div id="repeat-select-trigger" class="modal-select-trigger">しない</div>
+                </div>
+
+                <!-- ラベル入力 -->
+                <div class="modal-setting-item">
+                    <span class="setting-label">ラベル</span>
+                    <input type="text" id="new-alarm-label" class="modal-input-text" value="アラーム" placeholder="アラーム">
+                </div>
+
+                <!-- サウンド選択 -->
+                <div class="modal-setting-item">
+                    <span class="setting-label">サウンド</span>
+                    <select id="new-alarm-sound" class="modal-select">
+                        <option value="sound-alarm">アラーム</option>
+                        <option value="sound-push">☎️電話音</option>
+                        <option value="sound-bell">🔔鈴の音</option>
+                    </select>
+                </div>
+
+                <!-- スヌーズON /OFF -->
+                <div class="modal-setting-item">
+                    <span class="setting-label">スヌーズ</span>
+                    <button id="btn-modal-snooze" class="ios-switch"></button>
+                </div>
+
+                <!-- スヌーズの継続時間 -->
+                <div class="modal-setting-item">
+                    <span class="setting-label">スヌーズの継続時間</span>
+                    <select id="new-alarm-snooze-duration" class="modal-select">
+                        <input type="time" id="new-alarm-time-m" value="09:00">
+                    </select>
+                </div>
+            </div>
+
+            <!-- 見た目はそのままのボタン -->
+            <div id="repeat-modal" class="modal-overlay-sub">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button id="btn-repeat-back" class="modal-btn back-btn">＜</button>
+                        <p class="modal-header-title">繰り返し</p>
+                        <div style="width: 40px;"></div> <!-- 左右バランス用 -->
+                    </div>
+                    <div class="modal-settings-list">
+                        <ul id="repeat-options-list" class="ios-full-options-list">
+                            <li data-value="sunday">毎日曜日</li>
+                            <li data-value="monday">毎月曜日</li>
+                            <li data-value="tuesday">毎火曜日</li>
+                            <li data-value="wednesday">毎水曜日</li>
+                            <li data-value="thursday">毎木曜日</li>
+                            <li data-value="friday">毎金曜日</li>
+                            <li data-value="saturday">毎土曜日</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
         </div>
-     </div>
-     <script src="script.js"></script>
+    </div>
+    <script src="script.js"></script>
 </body>
 </html>
