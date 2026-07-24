@@ -308,3 +308,43 @@ if (btnRepeatBack && repeatModal) {
         repeatModal.classList.remove("show");
     });
 }
+
+// サウンド設定の連動システム（同じ画面サイズ・全画面トグル版）
+const soundTrigger = document.querySelector("#sound-select-trigger");
+const soundModal = document.querySelector("#sound-modal");
+const btnSoundBack = document.querySelector("#btn-sound-back");
+const soundOptionItems = document.querySelectorAll("#sound-options-list li");
+
+// 1. 「サウンド」の行をクリックしたら、同じサイズでサウンド画面をパッと開く
+if (soundTrigger && soundModal) {
+    soundTrigger.addEventListener("click", function () {
+        soundModal.classList.add("show");
+    });
+}
+
+// 2. 音リストをクリックしたときの処理（どれか１つを必ず選ぶ）
+soundOptionItems.forEach(function (item) {
+  item.addEventListener("click", function () {
+    // 他のすべての音からチェック（selectedクラス）を外す
+    soundOptionItems.forEach((i) => i.classList.remove("selected"));
+
+    // 今クリックした音だけに新しくチェックをつける
+    item.classList.add("selected");
+  });
+});
+
+// 3. サウンド画面の「＜ 戻る」ボタンを押したら選択した音を保存して閉じる
+if (btnSoundBack && soundModal) {
+    btnSoundBack.addEventListener("click", function () {
+
+        // 現在チェック（selected）がついている曜日があるか探す
+        const selectedSound = document.querySelector("#sound-options-list li.selected");
+
+        if (selectedSound) {
+            // もしチェックが付いている音があればその文字（例：アラーム）を元の画面に表示する
+            soundTrigger.textContent = selectedSound.textContent;
+        }
+        // 最後に、繰り返し画面を閉じて元の画面に戻る
+        soundModal.classList.remove("show");
+    });
+}

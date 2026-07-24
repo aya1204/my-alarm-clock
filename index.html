@@ -75,7 +75,7 @@
             </div>
 
             <!-- 2. 設定リストエリア -->
-            <div class="modal-settingss-list">
+            <div class="modal-settings-list">
 
                 <!-- 繰り返し設定 -->
                 <div class="modal-setting-item">
@@ -86,17 +86,13 @@
                 <!-- ラベル入力 -->
                 <div class="modal-setting-item">
                     <span class="setting-label">ラベル</span>
-                    <input type="text" id="new-alarm-label" class="modal-input-text" value="アラーム" placeholder="アラーム">
+                    <input type="text" id="new-alarm-label" class="modal-input-text" placeholder="アラーム">
                 </div>
 
                 <!-- サウンド選択 -->
                 <div class="modal-setting-item">
                     <span class="setting-label">サウンド</span>
-                    <select id="new-alarm-sound" class="modal-select">
-                        <option value="sound-alarm">アラーム</option>
-                        <option value="sound-push">☎️電話音</option>
-                        <option value="sound-bell">🔔鈴の音</option>
-                    </select>
+                    <div id="sound-select-trigger" class="modal-select-trigger">アラーム</div>
                 </div>
 
                 <!-- スヌーズON /OFF -->
@@ -109,7 +105,8 @@
                 <div class="modal-setting-item">
                     <span class="setting-label">スヌーズの継続時間</span>
                     <select id="new-alarm-snooze-duration" class="modal-select">
-                        <input type="time" id="new-alarm-time-m" value="09:00">
+                        <option value="9">9分</option>
+                        <!-- <input type="time" id="new-alarm-time-m" value="09:00"> -->
                     </select>
                 </div>
             </div>
@@ -122,6 +119,8 @@
                         <p class="modal-header-title">繰り返し</p>
                         <div style="width: 40px;"></div> <!-- 左右バランス用 -->
                     </div>
+
+                    <!-- 繰り返しの設定（モーダル） -->
                     <div class="modal-settings-list">
                         <ul id="repeat-options-list" class="ios-full-options-list">
                             <li data-value="sunday">毎日曜日</li>
@@ -135,6 +134,26 @@
                     </div>
                 </div>
             </div>
+
+                <!-- サウンドの設定（モーダル） -->
+                <div id="sound-modal" class="modal-overlay-sub">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button id="btn-sound-back" class="modal-btn back-btn">＜</button>
+                            <p class="modal-header-title">サウンド</p>
+                            <div style="width: 40px;"></div> <!-- 左右調整用 -->
+                        </div>
+                        <div class="modal-settings-list">
+                            <ul id="sound-options-list" class="ios-full-options-list">
+                                <li data-value="sound-alarm" class="selected">アラーム</li>
+                                <li data-value="sound-push">☎️電話音</li>
+                                <li data-value="sound-bell">🔔鈴の音</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         </div>
     </div>
