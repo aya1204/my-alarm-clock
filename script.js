@@ -189,9 +189,49 @@ btnModalCancel.addEventListener("click", function () {
   addModal.classList.remove("show");
 });
 
-// 3. 「確認」ボタンが押された時の処理
+// 3. 「確認（✔︎）」ボタンが押された時の処理
 btnModalCheck.addEventListener("click", function () {
-    // 画面を閉じる
+    // ①モーダルから設定された値（時間、ラベル）を取得する
+    const timeValue = newAlarmTime.value; // 例: "09:00"
+    const labelInput = document.querySelector("#new-alarm-label");
+    const labelValue = labelInput.value.trim() !== " " ? labelInput.value : "アラーム"; // モーダルで指定した時間
+    const soundTrigger = document.querySelector("#sound-select-trigger");
+    const soundValue = soundTrigger ? soundTrigger.textContent : "アラーム"; // 選択されたサウンド名
+
+    // ②新しいアラームのHTML要素を作成する
+    const newAlarmItem = document.createElement("div");
+    newAlarmItem.classList.add("alarm-item");
+
+    // 時間・ラベル・サウンド名を組み立てる
+    newAlarmItem.innerHTML = `
+        <div class ="alarm-left">
+            <div class="alarm-time">
+                <input type="time" class="alarm-time" value="${timeValue}">
+            </div>
+            <div class="alarm-label">${labelValue}, ${soundValue}</div>
+        </div>
+        <button class="ios-switch"></button>
+    `;
+
+    // ③新しく作ったスイッチ（.ios-switch）にON/OFFのクリックイベントを設定
+    const newSwitch = newAlarmItem.querySelector(".ios-switch");
+    newSwitch.addEventListener("click", function () {
+        if (newSwitch.style.backgroundColor === "pink") {
+            newSwitch.style.backgroundColor = "";
+        } else {
+            newSwitch.style.backgroundColor = "pink";
+        }
+    });
+
+    // ④「その他」のリスト（2番目の .alarm-list）の中に新しいアラームを一番下に追加する
+    const alarmLists = document.querySelectorAll(".alarm-list");
+    const otherAlarmList = alarmLists[1]; // 「その他」エリアのリスト
+    if (otherAlarmList) {
+        otherAlarmList.appendChild(newAlarmItem);
+    }
+
+    // ⑤フォームの入力をリセットしてモーダルを閉じる
+    labelInput.value = ""; // 入力欄をクリア
     addModal.classList.remove("show");
 });
 
@@ -382,7 +422,7 @@ if (snoozeWheel) {
         if (!isDragging) return;
         isDragging = false; // ここでドラッグを終了する
         const finalTranslateY = getTranslateY();
-        const index = Math.round((padingTop - finalTranslateY) / itemHeight);
+        const index = Math.round((paddingTop - finalTranslateY) / itemHeight);
         const clampedIndex = Math.max(0, Math.min(maxMinutes - minMinutes, index));
         scrollToMinute(clampedIndex + minMinutes);
     });

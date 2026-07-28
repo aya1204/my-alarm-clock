@@ -517,7 +517,7 @@ input[type="time"]::-webkit-calendar-picker-indicator {
     position: relative;
     height: 110px; /* 見せる領域の高さ */
     overflow: hidden;
-    mask-image: liner-gradient(to bottom, transparent, black 30%, black 70%, transparent);
+    mask-image: linear-gradient(to bottom, transparent, black 30%, black 70%, transparent);
     -webkit-mask-image: liner-gradient(to bottom, transparent, black 30%, black 70%, transparent);
     cursor: grab;
     user-select: none;
