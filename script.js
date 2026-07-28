@@ -170,7 +170,9 @@ window.addEventListener("keyup", function (event) {
     }
 })
 
-// 使う部品をHTMLから持ってくる
+// ==========================================
+// 1. 使う部品をHTMLから持ってくる
+// ==========================================
 const btnAddHeader = document.querySelector(".plus-btn"); // 右上の「＋」ボタン
 const addModal = document.querySelector("#add-modal");
 const btnModalCancel = document.querySelector("#btn-modal-cancel");
@@ -193,77 +195,9 @@ btnModalCheck.addEventListener("click", function () {
     addModal.classList.remove("show");
 });
 
-// // 🔁繰り返し設定の連動システム
-// const newAlarmRepeat = document.querySelector("#new-alarm-repeat");
-
-// // ⭕️記憶を入れておく箱を１つだけ用意する（再代入するので必ずletにする）
-//     let lastSelectedValue = "none";
-
-
-// // ユーザーが選択を変えたときの処理
-// newAlarmRepeat.addEventListener("change", function () {
-//     const currentValue = newAlarmRepeat.value;
-
-//     // ❌もし「今、選んだ曜日」が「直前と同じ曜日」なら選択を解除して「しない」に戻す
-//     if (currentValue === lastSelectedValue) {
-//         newAlarmRepeat.value = "none"; // 「しない」を選択状態にする
-//         lastSelectedValue = "none";
-//     } else {
-//         // 違う曜日が選ばれたら、それを新しい記憶にする
-//         lastSelectedValue = currentValue;
-//     }
-// });
-
-// // 🔁繰り返し設定の連動システム（自作セレクト完全トグル版）
-// const selectTrigger = document.querySelector("#repeat-select-trigger");
-// const optionsList = document.querySelector("#repeat-options-list");
-// const optionItems = document.querySelectorAll("#repeat-options-list li");
-
-// // 内部的に選択されている値を保存する変数（最初は「しない」なので "none"）
-// let currentSelectedValue = "none";
-
-// // 1. 右側の文字（トリガー）をクリックしたら、選択肢リストを開閉する
-// selectTrigger.addEventListener("click", function (event) {
-//     event.stopPropagation(); // 画面クリックにイベントが流れるのを防ぐ
-//     optionsList.classList.toggle("show");
-// });
-
-// // 2. 曜日リストの中の、どれかがクリックされた時の処理
-// optionItems.forEach(function (item) {
-//     item.addEventListener("click", function (event) {
-//         event.stopPropagation();
-        
-//         const clickedValue = item.getAttribute("data-value"); // クリックされた曜日
-//         const clickedText = item.textContent;                // 「毎月曜日」などの文字
-
-//         // ❌ もしクリックした曜日が、すでに選ばれている曜日と「全く同じ」なら解除！
-//         if (clickedValue === currentSelectedValue) {
-//             selectTrigger.textContent = "しない";
-//             currentSelectedValue = "none";
-//             item.classList.remove("selected"); // チェック模様を消す
-//         } else {
-//             // ⭕️ 違う曜日が選ばれたら、その曜日を表示して記憶する
-//             selectTrigger.textContent = clickedText;
-//             currentSelectedValue = clickedValue;
-            
-//             // 他の曜日の選択色を消して、今選んだ曜日だけに色をつける
-//             optionItems.forEach(i => i.classList.remove("selected"));
-//             item.classList.add("selected");
-//         }
-
-//         // 選び終わったらリストを閉じる
-//         optionsList.classList.remove("show");
-//     });
-// });
-
-// // 3. 選択肢が開いている時に、画面の他の場所をクリックしたらリストを閉じる（親切設計）
-// document.addEventListener("click", function (event) {
-//     if (optionsList && !optionsList.contains(event.target) && event.target !== selectTrigger) {
-//         optionsList.classList.remove("show");
-//     }
-// });
-
-// 🔁繰り返し設定の連動システム（同じ画面サイズ・全画面トグル版）
+// ==========================================
+// 2. 🔁繰り返し設定の連動システム（同じ画面サイズ・全画面トグル版）
+// ==========================================
 const repeatTrigger = document.querySelector("#repeat-select-trigger");
 const repeatModal = document.querySelector("#repeat-modal");
 const btnRepeatBack = document.querySelector("#btn-repeat-back");
@@ -309,7 +243,9 @@ if (btnRepeatBack && repeatModal) {
     });
 }
 
-// サウンド設定の連動システム（同じ画面サイズ・全画面トグル版）
+// ==========================================
+// 3. サウンド設定の連動システム（同じ画面サイズ・全画面トグル版）
+// ==========================================
 const soundTrigger = document.querySelector("#sound-select-trigger");
 const soundModal = document.querySelector("#sound-modal");
 const btnSoundBack = document.querySelector("#btn-sound-back");
@@ -346,5 +282,120 @@ if (btnSoundBack && soundModal) {
         }
         // 最後に、繰り返し画面を閉じて元の画面に戻る
         soundModal.classList.remove("show");
+    });
+}
+
+// ==========================================
+// 4. ⏰ スヌーズON/OFFとスクロールでスヌーズ時間設定
+// ==========================================
+const btnSnooze = document.querySelector("#btn-modal-snooze");
+const snoozeDurationContainer = document.querySelector("#snooze-duration-container");
+const snoozeWheel = document.querySelector("#snooze-wheel");
+const snoozeValueText = document.querySelector("#snooze-value-text");
+
+let isSnoozeOn = true;
+let selectedSnoozeMinutes = 9; // デフォルトは9分
+
+if (snoozeWheel) {
+    const itemHeight = 36; // 1項目の高さ(px)
+    const containerHeight = 110;
+    const paddingTop = (containerHeight - itemHeight) / 2; // 中央に合わせるオフセット（37px）
+    const minMinutes = 1;
+    const maxMinutes = 15;
+
+    // 1分〜15分のHTML作成
+    for (let i = minMinutes; i <= maxMinutes; i++) {
+        const item = document.createElement("div");
+        item.classList.add("ios-picker-item");
+        item.textContent = `${i} 分`;
+        item.dataset.value = i;
+        if (i === selectedSnoozeMinutes) {
+            item.classList.add("selected");
+        }
+        snoozeWheel.appendChild(item);
+    }
+
+    // 指定の分数へホイールを動かす関数
+    function scrollToMinute(minute) {
+        selectedSnoozeMinutes = minute;
+        const index = minute - minMinutes;
+        const translateY = paddingTop - (index * itemHeight);
+        snoozeWheel.style.transform = `translateY(${translateY}px)`;
+
+        // 見た目の選択強調クラスの更新
+        const items = snoozeWheel.querySelectorAll(".ios-picker-item");
+        items.forEach((item, idx) => {
+            if (idx === index) {
+                item.classList.add("selected");
+            } else {
+                item.classList.remove("selected");
+            }
+        });
+
+        // 選ばれた分数を「スヌーズの継続時間」の右側に即座に反映
+        if (snoozeValueText) {
+            snoozeValueText.textContent = `${selectedSnoozeMinutes}分`;
+        }
+    }
+
+    // 初期位置にセット（9分）
+    scrollToMinute(selectedSnoozeMinutes);
+
+    // --- スクロール・ドラッグ操作のイベント処理 ---
+    let startY = 0;
+    let currentTranslateY = 0;
+    let isDragging = false;
+
+    const pickerContainer = document.querySelector(".ios-picker-container");
+
+    // マウスホイールでのスクロール操作
+    pickerContainer.addEventListener("wheel", function (e) {
+        e.preventDefault();
+        if (e.deltaY > 0 && selectedSnoozeMinutes < maxMinutes) {
+            scrollToMinute(selectedSnoozeMinutes + 1);
+        } else if (e.deltaY < 0 && selectedSnoozeMinutes > minMinutes) {
+            scrollToMinute(selectedSnoozeMinutes - 1);
+        }
+    }, { passive: false });
+
+    // タッチ・ドラッグ操作
+    function getTranslateY() {
+        const style = window.getComputedStyle(snoozeWheel);
+        const matrix = new WebKitCSSMatrix(style.transform);
+        return matrix.f;
+    }
+
+    pickerContainer.addEventListener("mousedown", (e) => {
+        isDragging = true;
+        startY = e.pageY;
+        currentTranslateY = getTranslateY();
+    });
+
+    window.addEventListener("mousemove", (e) => {
+        if (!isDragging) return;
+        isDragging = false;
+        const deltaY = e.pageY - startY;
+        snoozeWheel.style.transform = `translateY(${currentTranslateY + deltaY}px)`;
+    });
+
+    window.addEventListener("mouseup", (e) => {
+        if (!isDragging) return;
+        isDragging = false; // ここでドラッグを終了する
+        const finalTranslateY = getTranslateY();
+        const index = Math.round((padingTop - finalTranslateY) / itemHeight);
+        const clampedIndex = Math.max(0, Math.min(maxMinutes - minMinutes, index));
+        scrollToMinute(clampedIndex + minMinutes);
+    });
+}
+
+// スヌーズON/OFFと連動して非表示にする処理
+if (btnSnooze && snoozeDurationContainer) {
+    btnSnooze.addEventListener("click", function () {
+        isSnoozeOn = !isSnoozeOn;
+
+        if (isSnoozeOn) {
+            btnSnooze.style.backgroundColor = "";
+            snoozeDurationContainer.classList.add("snooze-disabled");
+        }
     });
 }

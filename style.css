@@ -491,3 +491,90 @@ input[type="time"]::-webkit-calendar-picker-indicator {
 #new-alarm-label:not(:placeholder-shown) {
     color: #ffffff;
 }
+
+/*  ==============================================
+    スヌーズ設定 & iOSドラムロールピッカーのスタイル
+    ============================================== */
+
+/* スヌーズ全体の枠組み */
+.snooze-duration-wrapper {
+    margin-top: 15px;
+    background-color: #3a3a3c;
+    border-radius: 12px;
+    padding: 12px 16px;
+    transition: all 0.3s ease;
+}
+
+.snooze-duration-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+/* iOS風ドラムロールのコンテナ */
+.ios-picker-container {
+    position: relative;
+    height: 110px; /* 見せる領域の高さ */
+    overflow: hidden;
+    mask-image: liner-gradient(to bottom, transparent, black 30%, black 70%, transparent);
+    -webkit-mask-image: liner-gradient(to bottom, transparent, black 30%, black 70%, transparent);
+    cursor: grab;
+    user-select: none;
+}
+
+.ios-picker-container:active {
+    cursor: grabbing;
+}
+
+.ios-picker-selection-bar {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 100%;
+    height: 36px;
+    transform: translateY(-50%);
+    background-color: rgba(255, 255, 255, 0.1);
+    border-top: 0.5px solid rgba(255, 255, 255, 0.2);
+    border-bottom: 0.5px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    pointer-events: none;
+}
+
+/* スクロールするホイール部分 */
+.ios-picker-wheel {
+    position: absolute;
+    width: 100%;
+    top: 0;
+    left: 0;
+    transition: transform 0.1s ease-out;
+}
+
+/* 各分数の表示 */
+.ios-picker-item {
+    height: 36px;
+    line-height: 36px;
+    text-align: center;
+    font-size: 18px;
+    color: #8e8e93;
+    transition: color 0.2s, font-size 0.2s;
+}
+
+/* 中央に選ばれている項目 */
+.ios-picker-item:selected {
+    color: #ff9f0a;
+    font-size: 22px;
+    font-weight: bold;
+}
+
+/* 非表示設定 */
+.snooze-disabled {
+    display: none !important;
+}
+
+/* スヌーズの選択されている数値テキスト（例：5分） */
+.snooze-value-text {
+    color: #ff9f0a; /* iOSのオレンジ色 */
+    font-size: 16px;
+    font-weight: bold;
+}

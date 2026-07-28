@@ -98,16 +98,20 @@
                 <!-- スヌーズON /OFF -->
                 <div class="modal-setting-item">
                     <span class="setting-label">スヌーズ</span>
-                    <button id="btn-modal-snooze" class="ios-switch"></button>
+                    <button id="btn-modal-snooze" class="ios-switch" style="background-color: pink;"></button>
                 </div>
 
                 <!-- スヌーズの継続時間 -->
-                <div class="modal-setting-item">
-                    <span class="setting-label">スヌーズの継続時間</span>
-                    <select id="new-alarm-snooze-duration" class="modal-select">
-                        <option value="9">9分</option>
-                        <!-- <input type="time" id="new-alarm-time-m" value="09:00"> -->
-                    </select>
+                <div class="snooze-duration-wrapper" id="snooze-duration-container">
+                    <div class="snooze-duration-header">
+                        <span class="setting-label">スヌーズの継続時間</span>
+                        <!-- 選ばれた分数をリアルタイム表示するエリアを追加 -->
+                        <span id="snooze-value-text" class="snooze-value-text">9分</span>
+                    </div>
+                    <div class="ios-picker-container">
+                        <div class="ios-picker-selection-bar"></div>
+                        <div class="ios-picker-wheel" id="snooze-wheel"></div>
+                    </div>
                 </div>
             </div>
 
