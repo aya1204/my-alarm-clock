@@ -7,6 +7,8 @@ const inputPushTime = document.querySelector("#input-push-time");
 const inputBellTime = document.querySelector("#input-bell-time");
 let pushTimerId = null;
 let bellTimerId = null;
+let isEditMode = false;
+let currentEditingItem = null; // 現在編集中のアラーム要素を記憶する変数
 
 const btnTimer = document.querySelector("#btn-timer");
 btnAlarm.addEventListener("click", function () {
@@ -198,40 +200,53 @@ btnModalCheck.addEventListener("click", function () {
     const soundTrigger = document.querySelector("#sound-select-trigger");
     const soundValue = soundTrigger ? soundTrigger.textContent : "アラーム"; // 選択されたサウンド名
 
-    // ②新しいアラームのHTML要素を作成する
-    const newAlarmItem = document.createElement("div");
-    newAlarmItem.classList.add("alarm-item");
+    // 編集中の場合：既存のアラームを更新
+    if (currentEditingItem) {
+        const timeInput = currentEditingItem.querySelector("input[type='time']");
+        const labelDiv = currentEditingItem.querySelector(".alarm-label");
 
-    // 時間・ラベル・サウンド名を組み立てる
-    newAlarmItem.innerHTML = `
-        <div class ="alarm-left">
-            <div class="alarm-time">
-                <input type="time" class="alarm-time" value="${timeValue}">
-            </div>
-            <div class="alarm-label">${labelValue}, ${soundValue}</div>
-        </div>
-        <button class="ios-switch"></button>
-    `;
+        if (timeInput) timeInput.value = timeValue;
+        if (labelDiv) labelDiv.textContent = `${labelValue}、${soundValue}`;
 
-    // ③新しく作ったスイッチ（.ios-switch）にON/OFFのクリックイベントを設定
-    const newSwitch = newAlarmItem.querySelector(".ios-switch");
-    newSwitch.addEventListener("click", function () {
-        if (newSwitch.style.backgroundColor === "pink") {
-            newSwitch.style.backgroundColor = "";
-        } else {
-            newSwitch.style.backgroundColor = "pink";
-        }
-    });
-
-    // ④「その他」のリスト（2番目の .alarm-list）の中に新しいアラームを一番下に追加する
-    const alarmLists = document.querySelectorAll(".alarm-list");
-    const otherAlarmList = alarmLists[1]; // 「その他」エリアのリスト
-    if (otherAlarmList) {
-        otherAlarmList.appendChild(newAlarmItem);
+        currentEditingItem = null; // 編集終了
     }
 
-    // ⑤フォームの入力をリセットしてモーダルを閉じる
-    labelInput.value = ""; // 入力欄をクリア
+    // 新規追加の場合：新しいアラームを作成
+    else {
+        const newAlarmItem = document.createElement("div");
+        newAlarmItem.classList.add("alarm-item");
+
+        // 編集モード中ならマイナスアイコンも一緒に作成
+        const deleteIconHtml = isEditMode ? '<div class="delete-icon">-</div>' : '';
+
+        newAlarmItem.innerHTML = `
+            ${deleteIconHtml}
+            <div class="alarm-left>
+                <div class="alarm-time">
+                    <input type="time" class="alarm-time" value="${timeValue}">
+                </div>
+                <div class="alarm-label">${labelValue}、${soundValue}</div>
+            </div>
+            <button class="icon-switch"><.button>
+        `;
+
+        const newSwitch = newAlarmItem.querySelector(".ios-switch");
+        newSwitch.addEventListener("click", function () {
+            if (newSwitch.style.backgroundColor === "pink") {
+                newSwitch.style.backgroundColor = "";
+            } else {
+                newSwitch.style.backgroundColor = "pink";
+            }
+        });
+
+        const alarmLists = document.querySelectorAll(".alarm-list");
+        const otherAlarmList = alarmLists[1];
+        if (otherAlarmList) {
+            otherAlarmList.appendChild(newAlarmItem);
+        }
+    }
+
+    labelInput.value = "";
     addModal.classList.remove("show");
 });
 
@@ -437,5 +452,101 @@ if (btnSnooze && snoozeDurationContainer) {
             btnSnooze.style.backgroundColor = "";
             snoozeDurationContainer.classList.add("snooze-disabled");
         }
+    });
+}
+
+// ==========================================
+// 5. 編集モード ＆ アラーム編集・削除機能
+// ==========================================
+const btnEditHeader = document.querySelector("#btn-edit-header");
+const deleteContainer = document.querySelector("#delete-alarm-container");
+const btnDeleteAlarm = document.querySelector("#btn-delete-alarm");
+
+// 1. 「編集」ボタンを押したときの切り替え処理
+if (btnEditHeader) {
+    btnEditHeader.addEventListener("click", function () {
+        isEditMode = !isEditMode;
+        const alarmLists = document.querySelectorAll(".alarm-list");
+        const otherAlarmList = alarmLists[1]; // 「その他」エリア
+
+        if (isEditMode) {
+            btnEditHeader.textContent = "完了";
+            btnEditHeader.style.color = "#ff9f0a" // オレンジ色に
+            if (otherAlarmList) otherAlarmList.classList.add("editing-mode");
+
+            // 全てのアラーム行の左側に「赤いマイナスボタン」を挿入する（まだ無ければ）
+            const items = otherAlarmList.querySelectorAll(".alarm-item");
+            items.forEach((item) => {
+                if (!item.querySelector(".delete-icon")) {
+                    const deleteIcon = document.createElement("div");
+                    deleteIcon.classList.add("delete-icon");
+                    deleteIcon.textContent = "-";
+                    item.insertBefore(deleteIcon, item.firstChild);
+                }
+            });
+        } else {
+            btnEditHeader.textContent = "編集";
+            btnEditHeader.style.color = "";
+            if (otherAlarmList) otherAlarmList.classList.remove("editing-mode");
+        }
+    });
+}
+
+// 2. 「＋」ボタンで新規追加を開いたときは「削除ボタン」を隠す
+btnAddHeader.addEventListener("click", function () {
+    currentEditingItem = null; // 編集モード解除
+    const modalHeaderTitle = document.querySelector("#add-modal .modal-header-title");
+    if (modalHeaderTitle) modalHeaderTitle.textContent = "アラームを追加";
+    if (deleteContainer) deleteContainer.style.display = "none"; // 削除ボタンを隠す
+    addModal.classList.add("show");
+});
+
+// 3. アラーム行をクリックしたときの処理（編集モード時のみ開く）
+document.addEventListener("click", function (e) {
+    // クリックされた場所が「その他」のalarm-itemの中かチェック
+    const alarmItem = e.target.closest(".alarm-list.editing-mode .alarm-item");
+    if (!alarmItem) return;
+
+    // ①赤い「マイナスボタン（.delete-icon）」が押された場合は、その場で即削除
+    if (e.target.classList.contains("delete-icon")) {
+        alarmItem.remove();
+        return;
+    }
+
+    // ②それ以外の場所（行全体）が押された場合は編集モーダルを開く
+    currentEditingItem = alarmItem; // 編集対象のアラームを記録
+
+    // 既存のデータを取得してモーダルにセットする
+    const timeInput = alarmItem.querySelector("input[type='time']");
+    const labelDiv = alarmItem.querySelector(".alarm-label");
+
+    if (timeInput) {
+        document.querySelector("#new-alarm-time").value = timeInput.value;
+    }
+
+    if (labelDiv) {
+        // 例："アラーム、鈴の音"からラベル部分だけを抽出する
+        const textParts = labelDiv.textContent.split("、");
+        document.querySelector("#new-alarm-label").value = textParts[0] || "";
+    }
+
+    // タイトルを「アラームを編集」に変更し、削除ボタンを表示
+    const modalHeaderTitle = document.querySelector(
+    "#add-modal .modal-header-title",
+    );
+    if (modalHeaderTitle) modalHeaderTitle.textContent = "アラームを編集";
+    if (deleteContainer) deleteContainer.style.display = "block";
+
+    addModal.classList.add("show");
+});
+
+// 4. 「アラームを削除」ボタンが押された時
+if (btnDeleteAlarm) {
+    btnDeleteAlarm.addEventListener("click", function () {
+        if (currentEditingItem) {
+            currentEditingItem.remove(); // 画面からアラーム要素を消す
+            currentEditingItem = null;
+        }
+        addModal.classList.remove("show"); // モーダルを閉じる
     });
 }

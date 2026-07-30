@@ -8,7 +8,7 @@
 </head>
 <body>
     <div class="ios-header">
-        <button class="header-btn">編集</button>
+        <button class="header-btn" id="btn-edit-header">編集</button>
         <button class="header-btn plus-btn">＋</button>
     </div>
     <h1 class="header-title">アラーム</h1>
@@ -115,7 +115,11 @@
                 </div>
             </div>
 
-            <!-- 見た目はそのままのボタン -->
+            <div id="delete-alarm-container" style="display: none; margin-top: 20px;">
+                <button type="button" id="btn-delete-alarm" class="delete-btn">アラームを削除</button>
+            </div>
+
+            <!-- 繰り返し設定モーダル（サブ画面） -->
             <div id="repeat-modal" class="modal-overlay-sub">
                 <div class="modal-content">
                     <div class="modal-header">

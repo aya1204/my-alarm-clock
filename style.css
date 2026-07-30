@@ -578,3 +578,58 @@ input[type="time"]::-webkit-calendar-picker-indicator {
     font-size: 16px;
     font-weight: bold;
 }
+
+/* ==========================================
+   編集モード（Editing Mode）
+   ========================================== */
+/* 1. 赤いマイナスアイコン */
+.alarm-item .delete-icon {
+    display: none;
+    width: 22px;
+    height: 22px;
+    background-color: #ff3b30;
+    color: #ffffff;
+    border-radius: 50%;
+    font-weight: bold;
+    font-size: 18px;
+    line-height: 20px;
+    text-align: center;
+    margin-right: 12px;
+    user-select: none;
+}
+
+/* 編集モード中だけマイナスボタンを表示 */
+.alarm-list.editing-mode .delete-icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* 2. 文字・要素のグレーアウト（影がかったような表示） */
+.alarm-list.editing-mode .alarm-left {
+    opacity: 0.4; /* 薄いグレー（透明度40%） */
+    transition: opacity 0.2s ease;
+}
+
+.alarm-list.alarm-list.editing-mode .alarm-item {
+    cursor: pointer;
+}
+
+/* 編集モード時はスイッチを押せなくする（誤作動防止） */
+.alarm-list.alarm-list.editing-mode .ios-switch {
+    pointer-events: none;
+    opacity: 0.4;
+}
+
+/* 3. モーダル内の「アラームを削除」ボタン */
+.delete-btn {
+    width: 100%;
+    background-color: #2c2c2e;
+    color: #ff3b30;
+    border: none;
+    padding: 14px;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 12px;
+    cursor: pointer;
+}
