@@ -67,7 +67,7 @@ btnPush.addEventListener("click", function () {
     }
     // スイッチをON（赤 ※CSSで緑に変換される）にする
     btnPush.style.backgroundColor = "red";
-    
+
     // 1秒ごとに時間を比べるタイマーを開始！
     pushTimerId = setInterval(function () {
         const now = new Date();
@@ -183,12 +183,21 @@ const newAlarmTime = document.querySelector("#new-alarm-time");
 
 // 1. 「＋」ボタンが押されたら、追加画面を表示する
 btnAddHeader.addEventListener("click", function () {
+    currentEditingItem = null;
+
+    // 時間とラベルの初期値をセット（文字をクリアしてプレーズホルダーを表示させる）
+    document.querySelector("#new-alarm-time").value = "09:00";
+    document.querySelector("#new-alarm-label").value = "";
+
+    const modalHeaderTitle = document.querySelector("#add-modal .modal-header-title");
+    if (modalHeaderTitle) modalHeaderTitle.textContent = "アラームを追加";
+    if (deleteContainer) deleteContainer.style.display = "none";
     addModal.classList.add("show");
 });
 
 // 2. 「キャンセル」ボタンが押されたら追加画面を閉じる
 btnModalCancel.addEventListener("click", function () {
-  addModal.classList.remove("show");
+    addModal.classList.remove("show");
 });
 
 // 3. 「確認（✔︎）」ボタンが押された時の処理
@@ -196,7 +205,7 @@ btnModalCheck.addEventListener("click", function () {
     // ①モーダルから設定された値（時間、ラベル）を取得する
     const timeValue = newAlarmTime.value; // 例: "09:00"
     const labelInput = document.querySelector("#new-alarm-label");
-    const labelValue = labelInput.value.trim() !== " " ? labelInput.value : "アラーム"; // モーダルで指定した時間
+    const labelValue = labelInput.value.trim() !== "" ? labelInput.value.trim() : "アラーム"; // モーダルで指定した時間
     const soundTrigger = document.querySelector("#sound-select-trigger");
     const soundValue = soundTrigger ? soundTrigger.textContent : "アラーム"; // 選択されたサウンド名
 
@@ -206,7 +215,12 @@ btnModalCheck.addEventListener("click", function () {
         const labelDiv = currentEditingItem.querySelector(".alarm-label");
 
         if (timeInput) timeInput.value = timeValue;
-        if (labelDiv) labelDiv.textContent = `${labelValue}、${soundValue}`;
+        if (labelDiv) labelDiv.textContent = labelValue;
+        // {
+        //     const currentLabel = labelDiv.textContent.trim();
+        //     // もし「アラーム」なら入力欄は空にしておく（placeholderが表示される）
+        //     document.querySelector("#new-alarm-label").value = (currentLabel === "アラーム") ? "" : currentLabel;
+        // }
 
         currentEditingItem = null; // 編集終了
     }
@@ -221,13 +235,13 @@ btnModalCheck.addEventListener("click", function () {
 
         newAlarmItem.innerHTML = `
             ${deleteIconHtml}
-            <div class="alarm-left>
+            <div class="alarm-left">
                 <div class="alarm-time">
                     <input type="time" class="alarm-time" value="${timeValue}">
                 </div>
-                <div class="alarm-label">${labelValue}、${soundValue}</div>
+                <div class="alarm-label">${labelValue}</div>
             </div>
-            <button class="icon-switch"><.button>
+            <button class="ios-switch"></button>
         `;
 
         const newSwitch = newAlarmItem.querySelector(".ios-switch");
@@ -315,13 +329,13 @@ if (soundTrigger && soundModal) {
 
 // 2. 音リストをクリックしたときの処理（どれか１つを必ず選ぶ）
 soundOptionItems.forEach(function (item) {
-  item.addEventListener("click", function () {
-    // 他のすべての音からチェック（selectedクラス）を外す
-    soundOptionItems.forEach((i) => i.classList.remove("selected"));
+    item.addEventListener("click", function () {
+        // 他のすべての音からチェック（selectedクラス）を外す
+        soundOptionItems.forEach((i) => i.classList.remove("selected"));
 
-    // 今クリックした音だけに新しくチェックをつける
-    item.classList.add("selected");
-  });
+        // 今クリックした音だけに新しくチェックをつける
+        item.classList.add("selected");
+    });
 });
 
 // 3. サウンド画面の「＜ 戻る」ボタンを押したら選択した音を保存して閉じる
@@ -525,9 +539,13 @@ document.addEventListener("click", function (e) {
     }
 
     if (labelDiv) {
-        // 例："アラーム、鈴の音"からラベル部分だけを抽出する
-        const textParts = labelDiv.textContent.split("、");
-        document.querySelector("#new-alarm-label").value = textParts[0] || "";
+        const currentLabel = labelDiv.textContent.trim();
+
+        if (currentLabel === "アラーム") {
+            document.querySelector("#new-alarm-label").value = "";
+        } else {
+            document.querySelector("#new-alarm-label").value = currentLabel;
+        }
     }
 
     // タイトルを「アラームを編集」に変更し、削除ボタンを表示
