@@ -1,3 +1,5 @@
+// const { useId } = require("react");
+
 const btnAlarm = document.querySelector("#btn-alarm");
 const soundAlarm = document.querySelector("#sound-alarm");
 let timerId = null;
@@ -566,5 +568,93 @@ if (btnDeleteAlarm) {
             currentEditingItem = null;
         }
         addModal.classList.remove("show"); // モーダルを閉じる
+    });
+}
+
+// ==========================================
+// 🛌 睡眠|起床時間の変更処理
+// ==========================================
+
+// 要素の取得
+const btnSleepChange = document.querySelector("#btn-sleep-change");
+const sleepModal = document.querySelector("#sleep-modal");
+const btnSleepCancel = document.querySelector("#btn-sleep-cancel");
+const btnSleepSave = document.querySelector("#btn-sleep-save");
+
+const inputBedTime = document.querySelector("#input-bed-time");
+const inputWakeTime = document.querySelector("#input-wake-time");
+const modalSleepDuration = document.querySelector("#modal-sleep-duration");
+
+const displayWakeTime = document.querySelector("#display-wake-time");
+
+// １．就寝・起床時刻から睡眠時間を計算する関数（日またぎ処理）
+function calculateSleepDuration(bedTimeStr, wakeTimeStr) {
+    if (!bedTimeStr || !wakeTimeStr) return "0時間0分";
+
+    const [bedH, bedM] = betTimeStr.split(":").map(Number);
+    const [wakeH, wakeM] = wakeTimeStr.split(":").map(Number);
+
+    let bedTotalMinutes = bedH * 60 + bedM;
+    let wakeTotalMinutes = wakeH * 60 + wakeM;
+
+    // 起床時刻が就寝時刻以下の場合は「翌日」として24時間（1440）分足す
+    if (wakeTotalMinutes <= bedTotalMinutes) {
+        wakeTotalMinutes += 24 * 60;
+    }
+
+    const diffMinutes = wakeTotalMinutes - bedTotalMinutes;
+    const hours = Math.floor(diffMinutes / 60);
+    const minutes = diffMinutes % 60;
+
+    return `${hours}時間${minutes}分`;
+}
+
+// ２．モーダル内の予定睡眠時間テキストを更新
+function updateModalSleepDuration() {
+    if (inputBedTime && inputWakeTime && modalSleepDuration) {
+        const duration = calculateSleepDuration(inputBedTime.value, inputWakeTime.value);
+        modalSleepDuration.textContent = duration;
+    }
+}
+
+// 入力欄の値が変わったらリアルタイムで計算更新
+if (inputBedTime && inputWakeTime) {
+    inputBedTime.addEventListener("change", updateModalSleepDuration);
+    inputWakeTime.addEventListener("change", updateModalSleepDuration);
+}
+
+// ３．「変更」ボタンを押した時にモーダルを開く
+if (btnSleepChange) {
+    btnSleepChange.addEventListener("click", function () {
+        // メイン画面の起床時間をモーダルの起床時間にセット
+        if (displayWakeTime && inputWakeTime) {
+            inputWakeTime.value = displayWakeTime.textContent.trim();
+        }
+
+        // 睡眠時間の表示を更新
+        updateModalSleepDuration();
+
+        // モーダルを表示
+        sleepModal.classList.add("show");
+    });
+}
+
+// ４．キャンセルボタン（×）で閉じる
+if (btnModalCancel) {
+    btnSleepCancel.addEventListener("click", function () {
+        sleepModal.classList.remove("show");
+    });
+}
+
+// ５．チェックボタン（✔︎）で保存して画面の起床時間を更新
+if (btnSleepSave) {
+    btnSleepSave.addEventListener("click", function () {
+        if (inputWakeTime && displayWakeTime) {
+            // メイン画面の起床時間（div）をモーダルで選んだ値に更新
+            displayWakeTime.textContent = inputWakeTime.value;
+        }
+
+        // モーダルを閉じる
+        sleepModal.classList.remove("show");
     });
 }

@@ -16,12 +16,11 @@
     <div class="alarm-list sleep-list">
         <div class="alarm-item">
             <div class="alarm-left">
-                <div class="alarm-time">
-                    <input type="time" class="alarm-time" id="" value="06:30">
+                <div class="alarm-time" id="display-wake-time">06:30
                 </div>
                 <div class="alarm-label">明日の朝</div>
             </div>
-            <button id="btn-timer" class="ios-btn-change">変更</button>
+            <button id="btn-sleep-change" class="ios-btn-change">変更</button>
         </div>
     </div>
     <div class="section-title">その他</div>
@@ -59,6 +58,29 @@
     <audio id="sound-push" src="https://www.springin.org/wp-content/uploads/2022/09/%E3%83%95%E3%82%9A%E3%83%83%E3%82%B7%E3%83%A5%E9%9F%B3.mp3"></audio>
     <audio id="sound-bell" src="https://www.springin.org/wp-content/uploads/2022/07/%E9%88%B4.mp3"></audio>
 
+    <!-- 🛌睡眠｜起床　設定用モーダル -->
+     <div id="sleep-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button id="btn-sleep-cancel" class="modal-btn cancel">×</button>
+                <p class="modal-header-title">起床時を変更</p>
+                <button id="btn-sleep-save" class="modal-btn change">✔︎</button>
+            </div>
+            <div class="modal-settingslist">
+                <div class="modal-setting-item">
+                    <span class="setting-label">🛌就寝時刻</span>
+                    <input type="time" id="input-bed-time" value="23:00">
+                </div>
+                <div class="modal-setting-item">
+                    <span class="setting-label">⏰起床時刻</span>
+                    <input type="time" id="input-wake-time" value="06:30">
+                </div>
+                <div class="modal-setting-item">
+                    <span class="modal-sleep-duration">7時間30分</span>
+                </div>
+            </div>
+        </div>
+     </div>
     <!-- アラーム追加用のポップアップ画面（最初は隠れている） -->
     <div id="add-modal" class="modal-overlay">
         <div class="modal-content">
