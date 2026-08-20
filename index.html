@@ -59,7 +59,7 @@
     <audio id="sound-bell" src="https://www.springin.org/wp-content/uploads/2022/07/%E9%88%B4.mp3"></audio>
 
     <!-- 🛌睡眠｜起床　設定用モーダル -->
-     <div id="sleep-modal" class="modal-overlay">
+    <div id="sleep-modal" class="modal-overlay">
         <div class="modal-content">
             <div class="modal-header">
                 <button id="btn-sleep-cancel" class="modal-btn cancel">×</button>
@@ -79,8 +79,63 @@
                     <span class="modal-sleep-duration">7時間30分</span>
                 </div>
             </div>
+
+            <!-- ヘルスケア連携案内（ボタン風） -->
+            <div class="modal-content link-card">
+                <div class="modal-settingslist center-link">
+                    <span class="modal-link-text">"ヘルスケア"で睡眠スケジュールを編集</span>
+                </div>
+            </div>
+
+            <!-- アラームオプション -->
+            <div class="alarm-section-title">アラームオプション</div>
+            <div class="alarm-card">
+                <!-- アラーム　ON/OFF -->
+                <div class="alarm-row">
+                    <span class="alarm-option-label">アラーム</span>
+                    <label class="alarm-switch">
+                        <input type="checkbox" id="alarm-toggre" checked>
+                        <span class="alarm-slider"></span>
+                    </label>
+                </div>
+
+                <!-- アラームオプション詳細領域 -->
+                <div id="alram-options-group">
+                    <!-- サウンドと触覚（ダミーモーダル） -->
+                    <div class="alarm-row click-row">
+                        <span class="alarm-option-label">サウンドと触覚</span>
+                        <div class="alarm-select-preview">
+                            <span id="sound-preview-text">夜明け ＞</span>
+                        </div>
+                    </div>
+
+                    <!-- アラーム音量（スクロール/スライダー） -->
+                    <div class="alarm-row column">
+                        <div class="alarm-row-header">
+                            <span class="alarm-option-label">🔇</span>
+                            <span id="volume-value-text" class="sound-subtext">🔊</span>
+                        </div>
+                        <input type="range" id="alarm-volume-slider" min="0" max="100" value="100" class="alarm-range">
+                    </div>
+
+                    <!-- スヌーズの継続時間 -->
+                    <div class="snooze-duration-wrapper" id="snooze-duration-container">
+                        <div class="snooze-duration-header">
+                            <span class="setting-label">スヌーズの継続時間</span>
+                            <!-- 選ばれた分数をリアルタイム表示するエリアを追加 -->
+                            <span id="snooze-value-text" class="snooze-value-text">9分</span>
+                        </div>
+                        <div class="ios-picker-container">
+                            <div class="ios-picker-selection-bar"></div>
+                            <div class="ios-picker-wheel" id="snooze-wheel"></div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
         </div>
-     </div>
+    </div>
+
     <!-- アラーム追加用のポップアップ画面（最初は隠れている） -->
     <div id="add-modal" class="modal-overlay">
         <div class="modal-content">
@@ -184,8 +239,6 @@
                 </div>
             </div>
         </div>
-
-    </div>
     <script src="script.js"></script>
 </body>
 </html>

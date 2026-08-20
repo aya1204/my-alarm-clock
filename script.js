@@ -1,5 +1,3 @@
-// const { useId } = require("react");
-
 const btnAlarm = document.querySelector("#btn-alarm");
 const soundAlarm = document.querySelector("#sound-alarm");
 let timerId = null;
@@ -20,7 +18,7 @@ btnAlarm.addEventListener("click", function () {
         timerId = null;        // タイマーの記憶を消す
         soundAlarm.pause();    // 音を止める
         soundAlarm.currentTime = 0; // 音を最初に戻す
-        // btnAlarm.textContent = "⏰ アラーム";
+
         btnAlarm.style.backgroundColor = ""; // 背景色リセット
         return; // 重要なストッパー（ここで処理を終了して新しいタイマーを作らせない）
     }
@@ -218,11 +216,6 @@ btnModalCheck.addEventListener("click", function () {
 
         if (timeInput) timeInput.value = timeValue;
         if (labelDiv) labelDiv.textContent = labelValue;
-        // {
-        //     const currentLabel = labelDiv.textContent.trim();
-        //     // もし「アラーム」なら入力欄は空にしておく（placeholderが表示される）
-        //     document.querySelector("#new-alarm-label").value = (currentLabel === "アラーム") ? "" : currentLabel;
-        // }
 
         currentEditingItem = null; // 編集終了
     }
@@ -583,7 +576,7 @@ const btnSleepSave = document.querySelector("#btn-sleep-save");
 
 const inputBedTime = document.querySelector("#input-bed-time");
 const inputWakeTime = document.querySelector("#input-wake-time");
-const modalSleepDuration = document.querySelector("#modal-sleep-duration");
+const modalSleepDuration = document.querySelector(".modal-sleep-duration");
 
 const displayWakeTime = document.querySelector("#display-wake-time");
 
@@ -591,7 +584,7 @@ const displayWakeTime = document.querySelector("#display-wake-time");
 function calculateSleepDuration(bedTimeStr, wakeTimeStr) {
     if (!bedTimeStr || !wakeTimeStr) return "0時間0分";
 
-    const [bedH, bedM] = betTimeStr.split(":").map(Number);
+    const [bedH, bedM] = bedTimeStr.split(":").map(Number);
     const [wakeH, wakeM] = wakeTimeStr.split(":").map(Number);
 
     let bedTotalMinutes = bedH * 60 + bedM;
@@ -634,13 +627,16 @@ if (btnSleepChange) {
         // 睡眠時間の表示を更新
         updateModalSleepDuration();
 
+        // モーダルを開いた時に色を反映
+        if (alarmVolumeSlider) updateVolumesSliderBackground(alarmVolumeSlider);
+
         // モーダルを表示
         sleepModal.classList.add("show");
     });
 }
 
 // ４．キャンセルボタン（×）で閉じる
-if (btnModalCancel) {
+if (btnSleepCancel) {
     btnSleepCancel.addEventListener("click", function () {
         sleepModal.classList.remove("show");
     });
@@ -656,5 +652,27 @@ if (btnSleepSave) {
 
         // モーダルを閉じる
         sleepModal.classList.remove("show");
+    });
+}
+
+// ==========================================
+// 音量スライダーの着色処理
+// ==========================================
+const alarmVolumeSlider = document.querySelector("#alarm-volume-slider");
+
+// 音量（％）に合わせてバーの色（オレンジ/グレー）を塗り分ける関数
+function updateVolumesSliderBackground(slider) {
+    if (!slider) return;
+    const value = slider.value;
+    slider.style.background = `linear-gradient(to right, #ff9f0a 0%, #ff9f0a ${value}%, #3a3a3c ${value}%, #3a3a3c 100%)`;
+}
+
+// スライダー操作時にリアルタイムで色を更新
+if (alarmVolumeSlider) {
+    // 初期表示時の色を設定
+    updateVolumesSliderBackground(alarmVolumeSlider);
+
+    alarmVolumeSlider.addEventListener("input", function () {
+        updateVolumesSliderBackground(this);
     });
 }
