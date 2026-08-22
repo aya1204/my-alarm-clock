@@ -110,7 +110,7 @@ body {
     position: relative;
     width: 51px;
     height: 31px;
-    background-color: #3a3a3c; /* OFFの時のグレー */
+    background-color: #39393d; /* OFFの時のグレー */
     border-radius: 16px;
     border: none;
     cursor: pointer;
@@ -128,18 +128,16 @@ body {
     background-color: #ffffff;
     top: 2px;
     left: 2px;
-    transition: transform 0.2s ease-in-out;
-    box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.3);
+    transition: transform 0.2s ease-in-out, left 0.2s ease-in-out;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
 }
 
-/* JavaScriptで色がピンク（ON状態）になった時のiPhone風緑色への変身 */
-.ios-switch[style*="background-color: pink"],
-.ios-switch[style*="background-color: red"],
-.ios-switch[style*="background-color: yellow"] {
-    background-color: #34c759 !important; /* iOSの鮮やかな緑 */
+/* ON（クラス「active」がついた時）の緑色化と丸の移動 */
+.ios-switch.active {
+    background-color: #30d158 !important; /* iOSの鮮やかな緑 */
 }
 
-.ios-switch[style*="background-color"]::after {
+.ios-switch.active::after {
     transform: translateX(20px);
 }
 
@@ -154,7 +152,14 @@ input[type="time"].alarm-time {
     padding: 0;
     margin: 0;
     outline: none;
+    width: auto;
+    display: inline-block;
     -webkit-appearance: none;
+}
+
+/* 編集モード時は時間入力のネイティブイベントを無効化して行クリックを優先する */
+.alarm-list.editing-mode input[type="time"].alarm-time {
+    pointer-events: none;
 }
 
 /* パソコンやスマホのブラウザが勝手に出す「時計マーク」を非表示にする */
@@ -185,10 +190,10 @@ input[type="time"]::-webkit-calendar-picker-indicator {
     pointer-events: auto;
 }
 
-/* ポップアップの中身の白いボックス（iPhoneのダークモード風グレー） */
+/* ポップアップの中身のボックス */
 .modal-content {
     background-color: #2c2c2e;
-    width: 280px;
+    width: 320px;
     padding: 20px;
     border-radius: 14px;
     text-align: center;
@@ -214,31 +219,21 @@ input[type="time"]::-webkit-calendar-picker-indicator {
     outline: none;
 }
 
-/* ボタンの並び（横並び） */
-.modal-buttons {
-    display: flex;
-    justify-content: space-between;
-    gap: 10px;
-    margin-top: 15px;
-}
-
 /* ボタン共通設定 */
 .modal-btn {
     border: none;
-    padding: 10px 12px;
+    padding: 6px 12px;
     font-size: 16px;
     font-weight: bold;
     border-radius: 50%;
     cursor: pointer;
-
 }
 
 /* キャンセルボタンはグレー */
 .modal-btn.cancel {
-    font-size: 22px;
+    font-size: 18px;
     background-color: #3a3a3c;
     color: #ffffff;
-    padding: 8px 14px;
 }
 
 /* 確認ボタンはiOSオレンジ */
@@ -247,8 +242,7 @@ input[type="time"]::-webkit-calendar-picker-indicator {
     color: #ffffff;
 }
 
-/* モーダル画面 */
-/* ヘッダー */
+/* モーダル画面ヘッダー */
 .modal-header {
     display: flex;
     justify-content: space-between;
@@ -265,13 +259,13 @@ input[type="time"]::-webkit-calendar-picker-indicator {
 
 /* 時間選択の枠組み */
 .modal-time-picker {
-    margin: 20px 0;
+    margin: 10px 0;
 }
 
 /* 設定項目リストのコンテナ */
 .modal-settings-list {
-    background-color: #4c4c4e;
-    border-radius: 20px;
+    background-color: #3a3a3c;
+    border-radius: 12px;
     padding: 0 16px;
     text-align: left;
 }
@@ -282,11 +276,11 @@ input[type="time"]::-webkit-calendar-picker-indicator {
     justify-content: space-between;
     align-items: center;
     padding: 12px 0;
-    border-bottom: 0.5px solid #2c2c2e;
+    border-bottom: 0.5px solid #4c4c4e;
 }
 
-.modal-setting-item:latest-child {
-    border-bottom: none; /* 最後の行の線は消す */
+.modal-setting-item:last-child {
+    border-bottom: none;
 }
 
 /* 左側のラベル文字 */
@@ -295,212 +289,93 @@ input[type="time"]::-webkit-calendar-picker-indicator {
     color: #ffffff;
 }
 
-/* セレクトボックスとテキスト入力欄の共通スタイル */
-.modal-select, .modal-input-text {
+/* テキスト入力欄 */
+.modal-input-text {
     background: none;
     border: none;
     color: #ffffff;
     font-size: 16px;
     text-align: right;
     outline: none;
-    cursor: pointer;
-}
-
-/* テキスト入力欄の右寄せ・幅調整 */
-.modal-input-text {
     width: 60%;
 }
 
-/* 繰り返しのテキスト用スタイル */
-.modal-value-text {
-    color: #ffffff;
-    font-size: 16px;
-    cursor: pointer;
-    user-select: none; /* 文字の青い選択を防ぐ */
-}
-
-/* 自作セレクトの外枠 */
-.custom-select-container {
-    position: relative;
-    display: inline-block;
-}
-
-/* 表示されている文字「しない」や「毎月曜日」の見た目 */
 .modal-select-trigger {
-    color: #ffffff;
+    color: #8e8e93;
     font-size: 16px;
     cursor: pointer;
-    padding-right: 15px;
-    position: relative;
 }
 
-/* ＞　矢印をつける */
-.modal-select-trigger::after {
-    content: ">";
-    position: relative;
-    right: -5px;
-    top: 50%;
-    transform: translateY(-50%);
-    font-size: 12px;
-    color: #ffffff;
-}
-
-/* 浮き出る選択肢リストのスタイル */
-.custom-options-list {
-    display: none; /* 最初は隠す */
-    position: absolute;
-    right: 0;
-    top: 25px;
-    background-color: "2c2c2e"; /* iOSのダークモード風背景 */
-    border: 1px solid #3a3a3c;
-    border-radius: 8px;
-    padding: 0;
-    margin: 0;
-    list-style: none;
-    z-index: 999;
-    min-width: 100px;
-    box-shadow: 0px 4px 12px rgba(0,0,0,0.5);
-}
-
-/* リストを表示する用のクラス */
-.custom-options-list.show {
-    display: block;
-}
-
-/* 曜日ひとつひとつのボタン */
-.custom-options-list li {
-    padding: 10px 16px;
-    color: #fff;
-    font-size: 14px;
-    cursor: pointer;
-    text-align: center;
-    border-bottom: 1px solid #3a3a3c;
-}
-
-.custom-options-list li::last-child {
-    border-bottom: none;
-}
-
-/* 曜日を指で押したとき・選ばれているときの色 */
-.custom-options-list li:hover,
-.custom-options-list li.selected {
-    background-color: #3a3a3c;
-    color: #ffffff;
-}
-
-/*  ==============================================
-    🔁 繰り返し専用のサブモーダル（同じ画面サイズで重ねる）
-    ============================================== */
+/* 🔁 繰り返し専用のサブモーダル */
 .modal-overlay-sub {
-    position: fixed; /* 画面全体基準に固定 */
+    position: fixed;
     top: 0;
     left: 0;
     width: 100vw;
     height: 100vh;
     justify-content: center;
     align-items: center;
-    z-index: 2000;             /* 前の設定の上に完全に重ねる */
-    display: none;             /* 最初は隠す */
+    z-index: 2000;
+    display: none;
 }
 
-/* 表示用クラス */
 .modal-overlay-sub.show {
     display: flex !important;
 }
 
 .modal-overlay-sub .modal-content {
-    position: relative;
-    width: 100%; /* 横幅は親（オーバーレイ）に合わせる */
-    max-width: 400px; /* パソコンでも広がりすぎないサイズ上限 */
-    height: 100%; /* 画面の縦幅いっぱい */
-    max-height: 100vh; /* 高さ制限しない */
-    box-sizing: border-box;
-    overflow-y: auto; /* 中身が多くなったらスクロール */
+    width: 100%;
+    max-width: 360px;
+    height: auto;
     background-color: #2c2c2e;
     border-radius: 16px;
     padding: 20px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-    color: #ffffff;
 }
 
-/* 戻るボタンの見た目 */
 .back-btn {
-    color: #ff9f0a !important;
-    font-size: 16px !important;
-    white-space: nowrap;
+    background: none;
+    border: none;
+    color: #ff9f0a;
+    font-size: 18px;
+    cursor: pointer;
 }
 
-/* 画面いっぱいの曜日リスト */
 .ios-full-options-list {
     list-style: none;
     padding: 0;
     margin: 0;
-    background-color: #2c2c2e;
+    background-color: #3a3a3c;
     border-radius: 10px;
 }
 
-/* 曜日1行ずつのスタイル */
 .ios-full-options-list li {
-    padding: 16px;
+    padding: 14px 16px;
     color: #fff;
     font-size: 16px;
-    border-bottom: 1px solid #3a3a3c;
+    border-bottom: 0.5px solid #4c4c4e;
     cursor: pointer;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: #4c4c4e;
 }
 
 .ios-full-options-list li:last-child {
     border-bottom: none;
 }
 
-/* 選択されている曜日の文字色とチェックマーク（オレンジ） */
 .ios-full-options-list li.selected {
     color: #ff9f0a;
 }
 
-/* 選ばれているときに右側に「✔」を出す演出 */
 .ios-full-options-list li.selected::after {
     content: "✔";
     color: #ff9f0a;
     font-weight: bold;
 }
 
-/* 曜日画面用の背景と余白設定 */
-.modal-content-sub {
-    background-color: #1c1c1e;
-    width: 100%;
-    height: 100%;
-    padding: 20px;
-    box-sizing: border-box;
-}
-
-/* 戻るボタンの背景を透明にする */
-.back-btn {
-    background: none;
-    border: none;
-    cursor: pointer;
-}
-
-/* ラベルの入力文字（初期値）だけ薄いグレーで表示 */
-#new-alarm-label {
-    color: #8e8e93;
-}
-
-/* 文字を入力されたら（文字が消えたら）、白文字にする */
-#new-alarm-label:not(:placeholder-shown) {
-    color: #ffffff;
-}
-
-/*  ==============================================
-    スヌーズ設定 & iOSドラムロールピッカーのスタイル
-    ============================================== */
-
-/* スヌーズ全体の枠組み */
+/*  スヌーズ設定 & iOSドラムロールピッカー  */
 .snooze-duration-wrapper {
-    margin-top: 15px;
+    margin-top: 10px;
     background-color: #3a3a3c;
     border-radius: 12px;
     padding: 12px 16px;
@@ -514,19 +389,12 @@ input[type="time"]::-webkit-calendar-picker-indicator {
     margin-bottom: 8px;
 }
 
-/* iOS風ドラムロールのコンテナ */
 .ios-picker-container {
     position: relative;
-    height: 110px; /* 見せる領域の高さ */
+    height: 110px;
     overflow: hidden;
-    mask-image: linear-gradient(to bottom, transparent, black 30%, black 70%, transparent);
-    -webkit-mask-image: liner-gradient(to bottom, transparent, black 30%, black 70%, transparent);
     cursor: grab;
     user-select: none;
-}
-
-.ios-picker-container:active {
-    cursor: grabbing;
 }
 
 .ios-picker-selection-bar {
@@ -543,7 +411,6 @@ input[type="time"]::-webkit-calendar-picker-indicator {
     pointer-events: none;
 }
 
-/* スクロールするホイール部分 */
 .ios-picker-wheel {
     position: absolute;
     width: 100%;
@@ -552,31 +419,22 @@ input[type="time"]::-webkit-calendar-picker-indicator {
     transition: transform 0.1s ease-out;
 }
 
-/* 各分数の表示 */
 .ios-picker-item {
     height: 36px;
     line-height: 36px;
     text-align: center;
     font-size: 18px;
     color: #8e8e93;
-    transition: color 0.2s, font-size 0.2s;
 }
 
-/* 中央に選ばれている項目 */
-.ios-picker-item:selected {
+.ios-picker-item.selected {
     color: #ff9f0a;
-    font-size: 22px;
+    font-size: 20px;
     font-weight: bold;
 }
 
-/* 非表示設定 */
-.snooze-disabled {
-    display: none !important;
-}
-
-/* スヌーズの選択されている数値テキスト（例：5分） */
 .snooze-value-text {
-    color: #ff9f0a; /* iOSのオレンジ色 */
+    color: #ff9f0a;
     font-size: 16px;
     font-weight: bold;
 }
@@ -584,7 +442,6 @@ input[type="time"]::-webkit-calendar-picker-indicator {
 /* ==========================================
     編集モード（Editing Mode）
    ========================================== */
-/* 1. 赤いマイナスアイコン */
 .alarm-item .delete-icon {
     display: none;
     width: 22px;
@@ -600,30 +457,26 @@ input[type="time"]::-webkit-calendar-picker-indicator {
     user-select: none;
 }
 
-/* 編集モード中だけマイナスボタンを表示 */
 .alarm-list.editing-mode .delete-icon {
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-/* 2. 文字・要素のグレーアウト（影がかったような表示） */
 .alarm-list.editing-mode .alarm-left {
-    opacity: 0.4; /* 薄いグレー（透明度40%） */
+    opacity: 0.6;
     transition: opacity 0.2s ease;
 }
 
-.alarm-list.alarm-list.editing-mode .alarm-item {
+.alarm-list.editing-mode .alarm-item {
     cursor: pointer;
 }
 
-/* 編集モード時はスイッチを押せなくする（誤作動防止） */
-.alarm-list.alarm-list.editing-mode .ios-switch {
+.alarm-list.editing-mode .ios-switch {
     pointer-events: none;
     opacity: 0.4;
 }
 
-/* 3. モーダル内の「アラームを削除」ボタン */
 .delete-btn {
     width: 100%;
     background-color: #2c2c2e;
@@ -636,198 +489,83 @@ input[type="time"]::-webkit-calendar-picker-indicator {
     cursor: pointer;
 }
 
-/* ==========================================
-    睡眠｜起床スケジュールのモーダル
-   ========================================== */
+/* 睡眠モーダル用カード等 */
+.alarm-section-title {
+    font-size: 13px;
+    color: #8e8e93;
+    text-transform: uppercase;
+    margin: 16px 8px 6px 8px;
+    text-align: left;
+}
 
-   /* iOS風 グループ分けとカード設定 */
-    .alarm-section-title {
-        font-size: 13px;
-        color: #8e8e93;
-        text-transform: uppercase;
-        margin: 16px 8px 6px 8px;
-    }
+.alarm-card {
+    background: #1c1c1e;
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 12px;
+}
 
-    .alarm-card {
-        background: #1c1c1e; /* ダークモード基準 */
-        border-radius: 12px;
-        overflow: hidden;
-        margin-bottom: 12px;
-    }
+.alarm-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 16px;
+    border-bottom: 0.5px solid #38383a;
+    min-height: 44px;
+}
 
-    .alarm-row {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 12px 16px;
-        border-bottom: 0.5px solid #38383a;
-        min-height: 44px;
-    }
+.alarm-row:last-child {
+    border-bottom: none;
+}
 
-    .alarm-row:last-child {
-        border-bottom: none;
-    }
+.alarm-row.column {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+}
 
-    .alarm-row.column {
-        flex-direction: column;
-        align-items: stretch;
-        gap: 8px;
-    }
+.alarm-row-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
 
-    .alarm-row-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
+/* 音量スライダーの基本スタイル */
+.alarm-range {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 8px;
+    border-radius: 4px;
+    /* 初期状態（JavaScriptからグラデーション背景を動的に上書きします） */
+    background: linear-gradient(to right, #34c759 100%, #3a3a3c 100%);
+    outline: none;
+    cursor: pointer;
+}
 
-    .sound-label {
-        font-size: 16px;
-        color: #ffffff;
-    }
+/* スライダーのつまみ（iOS風の白い丸） */
+.alarm-range::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: #ffffff;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+}
 
-    .alarm-subtext {
-        font-size: 14px;
-        color: #8e8e93;
-    }
+.alarm-range::-moz-range-thumb {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: #ffffff;
+    cursor: pointer;
+    border: none;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+}
 
-    /* ヘルスケアリンクボタン風 */
-    .link-card {
-        cursor: pointer;
-        transition: background 0.2s;
-    }
-
-    .link-card:active {
-        background: #2c2c2e;
-    }
-
-    .center-link {
-        justify-content: center;
-    }
-
-    .alarm-link-text {
-        color: #0a84ff;
-        font-size: 15px;
-        font-weight: 500;
-    }
-
-    /* iOS風 トグルスイッチ */
-    .alarm-switch {
-        position: relative;
-        display: inline-block;
-        width: 51px;
-        height: 31px;
-    }
-
-    .alarm-switch input {
-        opacity: 0;
-        width: 0;
-        height: 0;
-    }
-
-    .alarm-slider {
-        position: absolute;
-        cursor: pointer;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background-color: #39393d;
-        transition: .3s;
-        border-radius: 31px;
-    }
-
-    .alarm-slider:before {
-        position: absolute;
-        content: "";
-        height: 27px;
-        width: 27px;
-        left: 2px;
-        bottom: 2px;
-        background-color: white;
-        transition: .3s;
-        border-radius: 50%;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-    }
-
-    .input:checked + alarm-slider {
-        background-color: #30d158;
-    }
-
-    input:checked + alarm-slider:before {
-        transform: translateX(20px)
-    }
-
-    /* 音量スライダー */
-    .alarm-range {
-        -webkit-appearance: none;
-        width: 100%;
-        height: 6px;
-        border-radius: 3px;
-        background: #3a3a3c;
-        outline: none;
-    }
-
-    .alarm-range::-webkit-slider-thumb {
-        -webkit-appearance: none;
-        appearance: none;
-        width: 22px;
-        height: 22px;
-        border-radius: 50%;
-        background: #ffffff;
-        cursor: pointer;
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
-    }
-
-    /* セレクトプレビュー風 */
-    .alarm-select-preview {
-        color: #8e8e93;
-        font-size: 15px;
-    }
-
-    .alarm-picker-wrapper {
-        position: relative;
-        height: 100px;
-        overflow: hidden;
-        margin-top: 4px;
-    }
-
-    .alarm-picker-highlight {
-        position: absolute;
-        top: 33px;
-        left: 0;
-        right: 0;
-        height: 0;
-        background: rgba(255, 255, 255, 0.08);
-        border-top: 0.5px solid rgba(255, 255, 255, 0.15);
-        border-bottom: 0.5px solid rgba(255, 255, 255, 0.15);
-        pointer-events: none;
-        border-radius: 6px;
-    }
-
-    .alarm-picker-wheel {
-        height: 100%;
-        overflow-y: scroll;
-        scroll-snap-type: y mandatory;
-        scrollbar-width: none; /* Firefox */
-        padding: 33px 0;
-    }
-
-    .alarm-picker-wheel::-webkit-scrollbar {
-        display: none;
-    }
-
-    .alarm-picker-item {
-        height: 34px;
-        line-height: 34px;
-        text-align: center;
-        font-size: 16px;
-        color: #8e8e93;
-        scroll-snap-align: center;
-        transition: color 0.2s, transform 0.2s;
-    }
-
-    .alarm-picker-item.selected {
-        color: #ffffff;
-        font-weight: bold;
-        transform: scale(1.1);
-    }
+.alarm-select-preview {
+    color: #8e8e93;
+    font-size: 15px;
+}

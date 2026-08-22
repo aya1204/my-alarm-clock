@@ -16,25 +16,28 @@
     <div class="alarm-list sleep-list">
         <div class="alarm-item">
             <div class="alarm-left">
-                <div class="alarm-time" id="display-wake-time">06:30
-                </div>
+                <div class="alarm-time" id="display-wake-time">06:30</div>
                 <div class="alarm-label">明日の朝</div>
             </div>
             <button id="btn-sleep-change" class="ios-btn-change">変更</button>
         </div>
     </div>
+    
     <div class="section-title">その他</div>
-    <div class="alarm-list">
+    <div class="alarm-list" id="other-alarm-list">
+        <!-- 赤いマイナスアイコン(delete-icon)を各行の先頭に追加 -->
         <div class="alarm-item">
+            <div class="delete-icon">-</div>
             <div class="alarm-left">
                 <div class="alarm-time">
                     <input type="time" class="alarm-time" id="input-alarm-time" value="07:00">
-                    </div>
+                </div>
                 <div class="alarm-label">アラーム</div>
             </div>
             <button id="btn-alarm" class="ios-switch"></button>
         </div>
         <div class="alarm-item">
+            <div class="delete-icon">-</div>
             <div class="alarm-left">
                 <div class="alarm-time">
                     <input type="time" class="alarm-time" id="input-push-time" value="08:00">
@@ -44,6 +47,7 @@
             <button id="btn-push" class="ios-switch"></button>
         </div>
         <div class="alarm-item">
+            <div class="delete-icon">-</div>
             <div class="alarm-left">
                 <div class="alarm-time">
                     <input type="time" class="alarm-time" id="input-bell-time" value="09:00">
@@ -58,7 +62,7 @@
     <audio id="sound-push" src="https://www.springin.org/wp-content/uploads/2022/09/%E3%83%95%E3%82%9A%E3%83%83%E3%82%B7%E3%83%A5%E9%9F%B3.mp3"></audio>
     <audio id="sound-bell" src="https://www.springin.org/wp-content/uploads/2022/07/%E9%88%B4.mp3"></audio>
 
-    <!-- 🛌睡眠｜起床　設定用モーダル -->
+    <!-- 🛌睡眠｜起床 設定用モーダル -->
     <div id="sleep-modal" class="modal-overlay">
         <div class="modal-content">
             <div class="modal-header">
@@ -80,28 +84,20 @@
                 </div>
             </div>
 
-            <!-- ヘルスケア連携案内（ボタン風） -->
             <div class="modal-content link-card">
                 <div class="modal-settingslist center-link">
                     <span class="modal-link-text">"ヘルスケア"で睡眠スケジュールを編集</span>
                 </div>
             </div>
 
-            <!-- アラームオプション -->
             <div class="alarm-section-title">アラームオプション</div>
             <div class="alarm-card">
-                <!-- アラーム　ON/OFF -->
                 <div class="alarm-row">
                     <span class="alarm-option-label">アラーム</span>
-                    <label class="alarm-switch">
-                        <input type="checkbox" id="alarm-toggre" checked>
-                        <span class="alarm-slider"></span>
-                    </label>
+                    <button id="alarm-toggle" class="ios-switch active"></button>
                 </div>
 
-                <!-- アラームオプション詳細領域 -->
-                <div id="alram-options-group">
-                    <!-- サウンドと触覚（ダミーモーダル） -->
+                <div id="alarm-options-group">
                     <div class="alarm-row click-row">
                         <span class="alarm-option-label">サウンドと触覚</span>
                         <div class="alarm-select-preview">
@@ -109,7 +105,6 @@
                         </div>
                     </div>
 
-                    <!-- アラーム音量（スクロール/スライダー） -->
                     <div class="alarm-row column">
                         <div class="alarm-row-header">
                             <span class="alarm-option-label">🔇</span>
@@ -118,94 +113,84 @@
                         <input type="range" id="alarm-volume-slider" min="0" max="100" value="100" class="alarm-range">
                     </div>
 
-                    <!-- スヌーズの継続時間 -->
-                    <div class="snooze-duration-wrapper" id="snooze-duration-container">
+                    <div class="modal-setting-item">
+                        <span class="setting-label">スヌーズ</span>
+                        <button id="btn-modal-snooze-sleep" class="ios-switch"></button>
+                    </div>
+                    <div class="snooze-duration-wrapper">
                         <div class="snooze-duration-header">
                             <span class="setting-label">スヌーズの継続時間</span>
-                            <!-- 選ばれた分数をリアルタイム表示するエリアを追加 -->
-                            <span id="snooze-value-text" class="snooze-value-text">9分</span>
+                            <span class="snooze-value-text">9分</span>
                         </div>
                         <div class="ios-picker-container">
                             <div class="ios-picker-selection-bar"></div>
-                            <div class="ios-picker-wheel" id="snooze-wheel"></div>
+                            <div class="ios-picker-wheel"></div>
                         </div>
                     </div>
                 </div>
-
             </div>
         </div>
     </div>
 
-    <!-- アラーム追加用のポップアップ画面（最初は隠れている） -->
+    <!-- アラーム追加・編集用のポップアップ画面 -->
     <div id="add-modal" class="modal-overlay">
         <div class="modal-content">
-            <!-- ヘッダー（キャンセルと「アラームを追加」、保存） -->
             <div class="modal-header">
                 <button id="btn-modal-cancel" class="modal-btn cancel">×</button>
-                <p class="modal-header-title">アラームを追加</p>
+                <p class="modal-header-title" id="modal-title-text">アラームを追加</p>
                 <button id="btn-modal-check" class="modal-btn check">✔︎</button>
             </div>
 
-            <!-- 1. 時間選択 -->
             <div class="modal-time-picker">
                 <input type="time" id="new-alarm-time" value="09:00">
             </div>
 
-            <!-- 2. 設定リストエリア -->
             <div class="modal-settings-list">
-
-                <!-- 繰り返し設定 -->
                 <div class="modal-setting-item">
                     <span class="setting-label">繰り返し</span>
                     <div id="repeat-select-trigger" class="modal-select-trigger">しない</div>
                 </div>
 
-                <!-- ラベル入力 -->
                 <div class="modal-setting-item">
                     <span class="setting-label">ラベル</span>
                     <input type="text" id="new-alarm-label" class="modal-input-text" placeholder="アラーム">
                 </div>
 
-                <!-- サウンド選択 -->
                 <div class="modal-setting-item">
                     <span class="setting-label">サウンド</span>
                     <div id="sound-select-trigger" class="modal-select-trigger">アラーム</div>
                 </div>
 
-                <!-- スヌーズON /OFF -->
                 <div class="modal-setting-item">
                     <span class="setting-label">スヌーズ</span>
-                    <button id="btn-modal-snooze" class="ios-switch" style="background-color: pink;"></button>
+                    <button id="btn-modal-snooze-add" class="ios-switch"></button>
                 </div>
 
-                <!-- スヌーズの継続時間 -->
-                <div class="snooze-duration-wrapper" id="snooze-duration-container">
+                <div class="snooze-duration-wrapper">
                     <div class="snooze-duration-header">
                         <span class="setting-label">スヌーズの継続時間</span>
-                        <!-- 選ばれた分数をリアルタイム表示するエリアを追加 -->
-                        <span id="snooze-value-text" class="snooze-value-text">9分</span>
+                        <span class="snooze-value-text">9分</span>
                     </div>
                     <div class="ios-picker-container">
                         <div class="ios-picker-selection-bar"></div>
-                        <div class="ios-picker-wheel" id="snooze-wheel"></div>
+                        <div class="ios-picker-wheel"></div>
                     </div>
                 </div>
             </div>
 
+            <!-- 編集モード時にのみ表示される「削除」ボタン -->
             <div id="delete-alarm-container" style="display: none; margin-top: 20px;">
                 <button type="button" id="btn-delete-alarm" class="delete-btn">アラームを削除</button>
             </div>
 
-            <!-- 繰り返し設定モーダル（サブ画面） -->
+            <!-- 繰り返し設定モーダル -->
             <div id="repeat-modal" class="modal-overlay-sub">
                 <div class="modal-content">
                     <div class="modal-header">
                         <button id="btn-repeat-back" class="modal-btn back-btn">＜</button>
                         <p class="modal-header-title">繰り返し</p>
-                        <div style="width: 40px;"></div> <!-- 左右バランス用 -->
+                        <div style="width: 40px;"></div>
                     </div>
-
-                    <!-- 繰り返しの設定（モーダル） -->
                     <div class="modal-settings-list">
                         <ul id="repeat-options-list" class="ios-full-options-list">
                             <li data-value="sunday">毎日曜日</li>
@@ -220,25 +205,25 @@
                 </div>
             </div>
 
-                <!-- サウンドの設定（モーダル） -->
-                <div id="sound-modal" class="modal-overlay-sub">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button id="btn-sound-back" class="modal-btn back-btn">＜</button>
-                            <p class="modal-header-title">サウンド</p>
-                            <div style="width: 40px;"></div> <!-- 左右調整用 -->
-                        </div>
-                        <div class="modal-settings-list">
-                            <ul id="sound-options-list" class="ios-full-options-list">
-                                <li data-value="sound-alarm" class="selected">アラーム</li>
-                                <li data-value="sound-push">☎️電話音</li>
-                                <li data-value="sound-bell">🔔鈴の音</li>
-                            </ul>
-                        </div>
+            <!-- サウンドの設定モーダル -->
+            <div id="sound-modal" class="modal-overlay-sub">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button id="btn-sound-back" class="modal-btn back-btn">＜</button>
+                        <p class="modal-header-title">サウンド</p>
+                        <div style="width: 40px;"></div>
+                    </div>
+                    <div class="modal-settings-list">
+                        <ul id="sound-options-list" class="ios-full-options-list">
+                            <li data-value="sound-alarm" class="selected">アラーム</li>
+                            <li data-value="sound-push">☎️電話音</li>
+                            <li data-value="sound-bell">🔔鈴の音</li>
+                        </ul>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
     <script src="script.js"></script>
 </body>
 </html>
