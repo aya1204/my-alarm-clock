@@ -1,4 +1,5 @@
 document.addEventListener("DOMContentLoaded", function () {
+
     // ==========================================
     // 1. 編集モードの切り替え処理
     // ==========================================
@@ -6,17 +7,17 @@ document.addEventListener("DOMContentLoaded", function () {
     const alarmLists = document.querySelectorAll(".alarm-list");
 
     if (btnEditHeader) {
-    btnEditHeader.addEventListener("click", function () {
-        alarmLists.forEach((list) => list.classList.toggle("editing-mode"));
-        btnEditHeader.textContent =
-        btnEditHeader.textContent === "編集" ? "✔︎" : "編集";
-    });
+        btnEditHeader.addEventListener("click", function () {
+            alarmLists.forEach((list) => list.classList.toggle("editing-mode"));
+            btnEditHeader.textContent =
+            btnEditHeader.textContent === "編集" ? "✔︎" : "編集";
+        });
     }
 
     // ==========================================
     // 2. スイッチ（ON/OFF）バインド関数
     // ==========================================
-        function bindSwitchEvent(sw) {
+    function bindSwitchEvent(sw) {
         sw.addEventListener("click", function (e) {
             e.stopPropagation(); // 行全体のクリックイベント発火を防ぐ
             this.classList.toggle("active");
@@ -39,10 +40,10 @@ document.addEventListener("DOMContentLoaded", function () {
             }
             }
         });
-        }
+    }
 
-        // 既存スイッチにイベント付与
-        document.querySelectorAll(".ios-switch").forEach(bindSwitchEvent);
+    // 既存スイッチにイベント付与
+    document.querySelectorAll(".ios-switch").forEach(bindSwitchEvent);
 
     // ==========================================
     // 3. 音量スライダーの緑色ゲージ（背景）更新処理
@@ -50,23 +51,52 @@ document.addEventListener("DOMContentLoaded", function () {
     const volumeSlider = document.querySelector("#alarm-volume-slider");
 
     function updateVolumeSlider(slider) {
-    if (!slider) return;
-    const value = slider.value;
-    const max = slider.max || 100;
-    const percentage = (value / max) * 100;
-    // 値に応じて緑色（#34c759）とグレー（#3a3a3c）の境界線を変更
-    slider.style.background = `linear-gradient(to right, #34c759 ${percentage}%, #3a3a3c ${percentage}%)`;
+        if (!slider) return;
+        const value = slider.value;
+        const max = slider.max || 100;
+        const percentage = (value / max) * 100;
+        // 値に応じて緑色（#34c759）とグレー（#3a3a3c）の境界線を変更
+        slider.style.background = `linear-gradient(to right, #34c759 ${percentage}%, #3a3a3c ${percentage}%)`;
     }
 
     if (volumeSlider) {
-    // 画面読み込み時の初期表示設定
-    updateVolumeSlider(volumeSlider);
+        // 画面読み込み時の初期表示設定
+        updateVolumeSlider(volumeSlider);
 
-    // スライダー操作時に緑色ゲージを即座に更新
-    volumeSlider.addEventListener("input", function () {
-        updateVolumeSlider(this);
-    });
+        // スライダー操作時に緑色ゲージを即座に更新
+        volumeSlider.addEventListener("input", function () {
+            updateVolumeSlider(this);
+        });
     }
+
+    // ==========================================
+    // 8. サブモーダル（繰り返し・サウンド）の要素を先に定義
+    // ==========================================
+    const soundTrigger = document.querySelector("#sound-select-trigger");
+    const soundModal = document.querySelector("#sound-modal");
+    const btnSoundBack = document.querySelector("#btn-sound-back");
+    const soundOptions = document.querySelectorAll("#sound-options-list li");
+
+    if (soundTrigger && soundModal) {
+        soundTrigger.addEventListener("click", () =>
+            soundModal.classList.add("show"),
+        );
+    }
+
+    if (btnSoundBack && soundModal) {
+        btnSoundBack.addEventListener("click", () =>
+            soundModal.classList.remove("show"),
+        );
+    }
+
+    soundOptions.forEach((option) => {
+        option.addEventListener("click", function () {
+            soundOptions.forEach((el) => el.classList.remove("selected"));
+            this.classList.add("selected");
+            if (soundTrigger) soundTrigger.textContent = this.textContent;
+            if (soundModal) soundModal.classList.remove("show");
+        });
+    });
 
     // ==========================================
     // 4. アラーム項目のタップ（編集モード時モーダルを開く）
@@ -80,30 +110,42 @@ document.addEventListener("DOMContentLoaded", function () {
     let currentEditingItem = null; // 現在編集中の要素を保持
 
     function bindItemClickEvent(item) {
-    item.addEventListener("click", function (e) {
-        if (e.target.classList.contains("ios-switch")) return;
+        item.addEventListener("click", function (e) {
+            if (e.target.classList.contains("ios-switch")) return;
 
-        const parentList = this.closest(".alarm-list");
+            const parentList = this.closest(".alarm-list");
 
-        // 編集モード時（editing-mode）のみモーダルを開く
-        if (parentList && parentList.classList.contains("editing-mode")) {
-        currentEditingItem = this; // 編集対象をセット
+            // 編集モード時（editing-mode）のみモーダルを開く
+            if (parentList && parentList.classList.contains("editing-mode")) {
+            currentEditingItem = this; // 編集対象をセット
 
-        const timeInput = this.querySelector('input[type="time"]');
-        const labelText = this.querySelector(".alarm-label");
+            const timeInput = this.querySelector('input[type="time"]');
+            const labelText = this.querySelector(".alarm-label");
 
-        if (timeInput && newAlarmTime) {
-            newAlarmTime.value = timeInput.value;
-        }
-        if (labelText && newAlarmLabel) {
-            newAlarmLabel.value = labelText.textContent.trim();
-        }
+            if (timeInput && newAlarmTime) {
+                newAlarmTime.value = timeInput.value;
+            }
 
-        if (modalTitle) modalTitle.textContent = "アラームを編集";
-        if (deleteBtnContainer) deleteBtnContainer.style.display = "block";
-        if (addModal) addModal.classList.add("show");
-        }
-    });
+            // サウンド名の取得（要素のdata属性から取得、デフォルトは「アラーム」）
+            const currentSound = this.dataset.sound || "アラーム";
+            if (soundTrigger) soundTrigger.textContent = currentSound;
+
+            // ラベルのセット（カスタムで入力されたラベルならその文字を入れ、サウンド名と同じか未設定なら空にする）
+            if (labelText && newAlarmLabel) {
+                const currentLabel = labelText.textContent.trim();
+                // サウンド名と同じ、または「アラーム」などの場合は空欄にする（未設定扱い）
+                if (currentLabel === currentSound || currentLabel === "アラーム") {
+                newAlarmLabel.value = "";
+                } else {
+                newAlarmLabel.value = currentLabel;
+                }
+            }
+
+            if (modalTitle) modalTitle.textContent = "アラームを編集";
+            if (deleteBtnContainer) deleteBtnContainer.style.display = "block";
+            if (addModal) addModal.classList.add("show");
+            }
+        });
     }
 
     // 既存の「その他」アラーム項目にクリックイベント設定
@@ -118,54 +160,59 @@ document.addEventListener("DOMContentLoaded", function () {
     const otherAlarmList = document.querySelector("#other-alarm-list");
 
     if (btnModalCheck) {
-    btnModalCheck.addEventListener("click", function () {
-        const timeVal = newAlarmTime ? newAlarmTime.value : "09:00";
-        const labelVal =
-        newAlarmLabel && newAlarmLabel.value.trim() !== ""
-            ? newAlarmLabel.value.trim()
+        btnModalCheck.addEventListener("click", function () {
+            const timeVal = newAlarmTime ? newAlarmTime.value : "09:00";
+            const soundVal = soundTrigger
+            ? soundTrigger.textContent.trim()
             : "アラーム";
 
-        if (
-        modalTitle &&
-        modalTitle.textContent === "アラームを編集" &&
-        currentEditingItem
-        ) {
-        // --- 編集保存時 ---
-        const timeInput =
-            currentEditingItem.querySelector('input[type="time"]');
-        const labelText = currentEditingItem.querySelector(".alarm-label");
+            // ★修正：入力欄が空のときのみサウンド名を採用し、入力されている場合はその文字を採用する
+            const inputLabel = newAlarmLabel ? newAlarmLabel.value.trim() : "";
+            const labelVal = inputLabel !== "" ? inputLabel : soundVal;
 
-        if (timeInput) timeInput.value = timeVal;
-        if (labelText) labelText.textContent = labelVal;
-        } else {
-        // --- 新規追加時 ---
-        const newItem = document.createElement("div");
-        newItem.className = "alarm-item";
-        newItem.innerHTML = `
-            <div class="delete-icon">-</div>
-            <div class="alarm-left">
-                <div class="alarm-time">
-                    <input type="time" class="alarm-time" value="${timeVal}">
-                </div>
-                <div class="alarm-label">${labelVal}</div>
-            </div>
-            <button class="ios-switch active"></button>
-        `;
+            if (
+            modalTitle &&
+            modalTitle.textContent === "アラームを編集" &&
+            currentEditingItem
+            ) {
+            // --- 編集保存時 ---
+            const timeInput =
+                currentEditingItem.querySelector('input[type="time"]');
+            const labelText = currentEditingItem.querySelector(".alarm-label");
 
-        // 新しく作った要素にイベントをバインド
-        const newSwitch = newItem.querySelector(".ios-switch");
-        if (newSwitch) bindSwitchEvent(newSwitch);
-        bindItemClickEvent(newItem);
+            if (timeInput) timeInput.value = timeVal;
+            if (labelText) labelText.textContent = labelVal;
+            currentEditingItem.dataset.sound = soundVal; // サウンド情報を保持
+            } else {
+            // --- 新規追加時 ---
+            const newItem = document.createElement("div");
+            newItem.className = "alarm-item";
+            newItem.dataset.sound = soundVal; // サウンド情報を保持
+            newItem.innerHTML = `
+                    <div class="delete-icon">-</div>
+                    <div class="alarm-left">
+                        <div class="alarm-time">
+                            <input type="time" class="alarm-time" value="${timeVal}">
+                        </div>
+                        <div class="alarm-label">${labelVal}</div>
+                    </div>
+                    <button class="ios-switch active"></button>
+                `;
 
-        // リスト末尾に追加
-        if (otherAlarmList) {
-            otherAlarmList.appendChild(newItem);
-        }
-        }
+            // 新しく作った要素にイベントをバインド
+            const newSwitch = newItem.querySelector(".ios-switch");
+            if (newSwitch) bindSwitchEvent(newSwitch);
+            bindItemClickEvent(newItem);
 
-        // モーダルを閉じる
-        if (addModal) addModal.classList.remove("show");
-    });
+            // リスト末尾に追加
+            if (otherAlarmList) {
+                otherAlarmList.appendChild(newItem);
+            }
+            }
+
+            // モーダルを閉じる
+            if (addModal) addModal.classList.remove("show");
+        });
     }
 
     // ==========================================
@@ -173,13 +220,13 @@ document.addEventListener("DOMContentLoaded", function () {
     // ==========================================
     const btnDeleteAlarm = document.querySelector("#btn-delete-alarm");
     if (btnDeleteAlarm) {
-    btnDeleteAlarm.addEventListener("click", function () {
-        if (currentEditingItem) {
-        currentEditingItem.remove();
-        currentEditingItem = null;
-        }
-        if (addModal) addModal.classList.remove("show");
-    });
+        btnDeleteAlarm.addEventListener("click", function () {
+            if (currentEditingItem) {
+            currentEditingItem.remove();
+            currentEditingItem = null;
+            }
+            if (addModal) addModal.classList.remove("show");
+        });
     }
 
     // ==========================================
@@ -190,9 +237,9 @@ document.addEventListener("DOMContentLoaded", function () {
     // 睡眠モーダルを開く
     const btnSleepChange = document.querySelector("#btn-sleep-change");
     if (btnSleepChange && sleepModal) {
-    btnSleepChange.addEventListener("click", () =>
-        sleepModal.classList.add("show"),
-    );
+        btnSleepChange.addEventListener("click", () =>
+            sleepModal.classList.add("show"),
+        );
     }
 
     // 睡眠モーダルの「×」ボタンで閉じる
@@ -203,11 +250,11 @@ document.addEventListener("DOMContentLoaded", function () {
         );
     }
 
-    // 睡眠モーダルの「✔︎」ボタンで閉じる（必要に応じて保存処理を記述）
+    // 睡眠モーダルの「✔︎」ボタンで閉じる
     const btnSleepCheck = document.querySelector("#btn-sleep-check");
     if (btnSleepCheck && sleepModal) {
         btnSleepCheck.addEventListener("click", () =>
-            sleepModal.classList.remove("show")
+            sleepModal.classList.remove("show"),
         );
     }
 
@@ -220,6 +267,7 @@ document.addEventListener("DOMContentLoaded", function () {
             if (deleteBtnContainer) deleteBtnContainer.style.display = "none";
             if (newAlarmTime) newAlarmTime.value = "09:00";
             if (newAlarmLabel) newAlarmLabel.value = "";
+            if (soundTrigger) soundTrigger.textContent = "アラーム"; // 初期サウンド
             addModal.classList.add("show");
         });
     }
@@ -233,61 +281,37 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     // ==========================================
-    // 8. サブモーダル（繰り返し・サウンド）の処理
+    // 8. その他のサブモーダル（繰り返し）の処理
     // ==========================================
     const repeatTrigger = document.querySelector("#repeat-select-trigger");
     const repeatModal = document.querySelector("#repeat-modal");
     const btnRepeatBack = document.querySelector("#btn-repeat-back");
 
     if (repeatTrigger && repeatModal) {
-    repeatTrigger.addEventListener("click", () =>
-        repeatModal.classList.add("show"),
-    );
+        repeatTrigger.addEventListener("click", () =>
+            repeatModal.classList.add("show"),
+        );
     }
+
     if (btnRepeatBack && repeatModal) {
-    btnRepeatBack.addEventListener("click", () =>
-        repeatModal.classList.remove("show"),
-    );
+        btnRepeatBack.addEventListener("click", () =>
+            repeatModal.classList.remove("show"),
+        );
     }
 
     const repeatOptions = document.querySelectorAll("#repeat-options-list li");
     repeatOptions.forEach((option) => {
-    option.addEventListener("click", function () {
-        this.classList.toggle("selected");
-        const selected = Array.from(repeatOptions)
-        .filter((el) => el.classList.contains("selected"))
-        .map((el) => el.textContent.replace("毎", ""));
+        option.addEventListener("click", function () {
+            this.classList.toggle("selected");
+            const selected = Array.from(repeatOptions)
+            .filter((el) => el.classList.contains("selected"))
+            .map((el) => el.textContent.replace("毎", ""));
 
-        if (repeatTrigger) {
-        repeatTrigger.textContent =
-            selected.length > 0 ? selected.join(" ") : "しない";
-        }
-    });
-    });
-
-    const soundTrigger = document.querySelector("#sound-select-trigger");
-    const soundModal = document.querySelector("#sound-modal");
-    const btnSoundBack = document.querySelector("#btn-sound-back");
-
-    if (soundTrigger && soundModal) {
-    soundTrigger.addEventListener("click", () =>
-        soundModal.classList.add("show"),
-    );
-    }
-    if (btnSoundBack && soundModal) {
-    btnSoundBack.addEventListener("click", () =>
-        soundModal.classList.remove("show"),
-    );
-    }
-
-    const soundOptions = document.querySelectorAll("#sound-options-list li");
-    soundOptions.forEach((option) => {
-    option.addEventListener("click", function () {
-        soundOptions.forEach((el) => el.classList.remove("selected"));
-        this.classList.add("selected");
-        if (soundTrigger) soundTrigger.textContent = this.textContent;
-        if (soundModal) soundModal.classList.remove("show");
-    });
+            if (repeatTrigger) {
+            repeatTrigger.textContent =
+                selected.length > 0 ? selected.join(" ") : "しない";
+            }
+        });
     });
 
     // ==========================================
@@ -323,7 +347,7 @@ document.addEventListener("DOMContentLoaded", function () {
         item.textContent = `${i}分`;
         item.dataset.value = i;
         if (i === selectedSnoozeMinutes) {
-        item.classList.add("selected");
+            item.classList.add("selected");
         }
         snoozeWheel.appendChild(item);
     }
@@ -336,11 +360,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
         const items = snoozeWheel.querySelectorAll(".ios-picker-item");
         items.forEach((item, idx) => {
-        if (idx === index) {
-            item.classList.add("selected");
-        } else {
-            item.classList.remove("selected");
-        }
+            if (idx === index) {
+                item.classList.add("selected");
+            } else {
+                item.classList.remove("selected");
+            }
         });
 
         if (snoozeValueText) {
@@ -353,18 +377,18 @@ document.addEventListener("DOMContentLoaded", function () {
     pickerContainer.addEventListener(
         "wheel",
         function (e) {
-        e.preventDefault();
-        if (e.deltaY > 0 && selectedSnoozeMinutes < maxMinutes) {
-            scrollToMinute(selectedSnoozeMinutes + 1);
-        } else if (e.deltaY < 0 && selectedSnoozeMinutes > minMinutes) {
-            scrollToMinute(selectedSnoozeMinutes - 1);
-        }
-        },
-        { passive: false },
-    );
+            e.preventDefault();
+            if (e.deltaY > 0 && selectedSnoozeMinutes < maxMinutes) {
+                scrollToMinute(selectedSnoozeMinutes + 1);
+            } else if (e.deltaY < 0 && selectedSnoozeMinutes > minMinutes) {
+                scrollToMinute(selectedSnoozeMinutes - 1);
+            }
+            },
+            { passive: false },
+        );
     }
 
     document.querySelectorAll(".snooze-duration-wrapper").forEach((wrapper) => {
-    setupSnoozePicker(wrapper);
+        setupSnoozePicker(wrapper);
+        });
     });
-});
