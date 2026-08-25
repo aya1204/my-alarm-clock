@@ -187,6 +187,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // ==========================================
     const sleepModal = document.querySelector("#sleep-modal");
 
+    // 睡眠モーダルを開く
     const btnSleepChange = document.querySelector("#btn-sleep-change");
     if (btnSleepChange && sleepModal) {
     btnSleepChange.addEventListener("click", () =>
@@ -194,32 +195,41 @@ document.addEventListener("DOMContentLoaded", function () {
     );
     }
 
+    // 睡眠モーダルの「×」ボタンで閉じる
     const btnSleepCancel = document.querySelector("#btn-sleep-cancel");
     if (btnSleepCancel && sleepModal) {
-    btnSleepCancel.addEventListener("click", () =>
-        sleepModal.classList.remove("show"),
-    );
+        btnSleepCancel.addEventListener("click", () =>
+            sleepModal.classList.remove("show"),
+        );
+    }
+
+    // 睡眠モーダルの「✔︎」ボタンで閉じる（必要に応じて保存処理を記述）
+    const btnSleepCheck = document.querySelector("#btn-sleep-check");
+    if (btnSleepCheck && sleepModal) {
+        btnSleepCheck.addEventListener("click", () =>
+            sleepModal.classList.remove("show")
+        );
     }
 
     // 「＋」ボタンで追加モーダルを開く
     const plusBtn = document.querySelector(".plus-btn");
     if (plusBtn && addModal) {
-    plusBtn.addEventListener("click", () => {
-        currentEditingItem = null; // 新規追加なので編集対象をリセット
-        if (modalTitle) modalTitle.textContent = "アラームを追加";
-        if (deleteBtnContainer) deleteBtnContainer.style.display = "none";
-        if (newAlarmTime) newAlarmTime.value = "09:00";
-        if (newAlarmLabel) newAlarmLabel.value = "";
-        addModal.classList.add("show");
-    });
+        plusBtn.addEventListener("click", () => {
+            currentEditingItem = null; // 新規追加なので編集対象をリセット
+            if (modalTitle) modalTitle.textContent = "アラームを追加";
+            if (deleteBtnContainer) deleteBtnContainer.style.display = "none";
+            if (newAlarmTime) newAlarmTime.value = "09:00";
+            if (newAlarmLabel) newAlarmLabel.value = "";
+            addModal.classList.add("show");
+        });
     }
 
-    // モーダル閉じる（×ボタン）
+    // アラーム追加モーダルの「×」ボタンで閉じる
     const btnModalCancel = document.querySelector("#btn-modal-cancel");
     if (btnModalCancel && addModal) {
-    btnModalCancel.addEventListener("click", () =>
-        addModal.classList.remove("show"),
-    );
+        btnModalCancel.addEventListener("click", () =>
+            addModal.classList.remove("show"),
+        );
     }
 
     // ==========================================
