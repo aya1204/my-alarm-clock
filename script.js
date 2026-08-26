@@ -252,10 +252,18 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // 睡眠モーダルの「✔︎」ボタンで閉じる
     const btnSleepCheck = document.querySelector("#btn-sleep-check");
+    const inputWakeTime = document.querySelector("#input-wake-time"); // 起床時間入力欄
+    const displayWakeTime = document.querySelector("#display-wake-time"); // 元画面の表示エリア
     if (btnSleepCheck && sleepModal) {
-        btnSleepCheck.addEventListener("click", () =>
-            sleepModal.classList.remove("show"),
-        );
+        btnSleepCheck.addEventListener("click", () => {
+            // 1．入力欄の値が存在し、かつ表示エリアが存在する場合
+            if (inputWakeTime && displayWakeTime) {
+                // 2．入力欄の値（6:30など）を表示エリアのテキストに代入する
+                displayWakeTime.textContent = inputWakeTime.value;
+            }
+            // 3．モーダルを閉じる
+            sleepModal.classList.remove("show");
+        });
     }
 
     // 「＋」ボタンで追加モーダルを開く
