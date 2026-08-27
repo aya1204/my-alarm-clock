@@ -119,11 +119,13 @@ document.addEventListener("DOMContentLoaded", function () {
             if (parentList && parentList.classList.contains("editing-mode")) {
             currentEditingItem = this; // 編集対象をセット
 
-            const timeInput = this.querySelector('input[type="time"]');
+            const timeText = this.querySelector(".alarm-time");
             const labelText = this.querySelector(".alarm-label");
 
-            if (timeInput && newAlarmTime) {
-                newAlarmTime.value = timeInput.value;
+            if (timeText && newAlarmTime) {
+                // 例："07:00" -> モーダル入力用に "07:00"（2桁）に整形してセット
+                const [h, m] = timeText.textContent.trim().split(":");
+                newAlarmTime.value = `${h.padStart(2, "0")}:${m}`;
             }
 
             // サウンド名の取得（要素のdata属性から取得、デフォルトは「アラーム」）
@@ -161,7 +163,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
     if (btnModalCheck) {
         btnModalCheck.addEventListener("click", function () {
-            const timeVal = newAlarmTime ? newAlarmTime.value : "09:00";
+            const rawTime = newAlarmTime ? newAlarmTime.value : "09:00";
+            const timeVal = rawTime.replace(/^0/, ""); // 先頭の0を削除（例：09:00 → 9:00）
             const soundVal = soundTrigger
             ? soundTrigger.textContent.trim()
             : "アラーム";
@@ -176,13 +179,13 @@ document.addEventListener("DOMContentLoaded", function () {
             currentEditingItem
             ) {
             // --- 編集保存時 ---
-            const timeInput =
-                currentEditingItem.querySelector('input[type="time"]');
+            const timeText =
+                currentEditingItem.querySelector(".alarm-time");
             const labelText = currentEditingItem.querySelector(".alarm-label");
 
-            if (timeInput) timeInput.value = timeVal;
+            if (timeText) timeText.textContent = timeVal; // テキストを更新
             if (labelText) labelText.textContent = labelVal;
-            currentEditingItem.dataset.sound = soundVal; // サウンド情報を保持
+                currentEditingItem.dataset.sound = soundVal; // サウンド情報を保持
             } else {
             // --- 新規追加時 ---
             const newItem = document.createElement("div");
@@ -191,9 +194,7 @@ document.addEventListener("DOMContentLoaded", function () {
             newItem.innerHTML = `
                     <div class="delete-icon">-</div>
                     <div class="alarm-left">
-                        <div class="alarm-time">
-                            <input type="time" class="alarm-time" value="${timeVal}">
-                        </div>
+                        <div class="alarm-time">${timeVal}</div>
                         <div class="alarm-label">${labelVal}</div>
                     </div>
                     <button class="ios-switch active"></button>
@@ -259,7 +260,7 @@ document.addEventListener("DOMContentLoaded", function () {
             // 1．入力欄の値が存在し、かつ表示エリアが存在する場合
             if (inputWakeTime && displayWakeTime) {
                 // 2．入力欄の値（6:30など）を表示エリアのテキストに代入する
-                displayWakeTime.textContent = inputWakeTime.value;
+                displayWakeTime.textContent = inputWakeTime.value.replace(/^0/, ""); // 先頭の0を削除（例：09:00 → 9:00）
             }
             // 3．モーダルを閉じる
             sleepModal.classList.remove("show");
