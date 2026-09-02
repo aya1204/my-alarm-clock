@@ -46,24 +46,32 @@ document.addEventListener("DOMContentLoaded", function () {
     document.querySelectorAll(".ios-switch").forEach(bindSwitchEvent);
 
     // ==========================================
-    // 3. 音量スライダーの緑色ゲージ（背景）更新処理
+    // 3. 音量スライダーの緑色ゲージ（背景）＆実際の音量更新処理
     // ==========================================
     const volumeSlider = document.querySelector("#alarm-volume-slider");
+
+    // 画面上の全<audio>要素を取得
+    const audioElements = document.querySelectorAll("audio");
 
     function updateVolumeSlider(slider) {
         if (!slider) return;
         const value = slider.value;
         const max = slider.max || 100;
         const percentage = (value / max) * 100;
-        // 値に応じて緑色（#34c759）とグレー（#3a3a3c）の境界線を変更
+        // 1. 見た目の緑色ゲージを変更
         slider.style.background = `linear-gradient(to right, #34c759 ${percentage}%, #3a3a3c ${percentage}%)`;
+        // 2. 実際の音量を変更(0〜100の値を0.0〜1.0に変換)
+        const volumeRatio = value / max;
+        audioElements.forEach((audio) => {
+            audio.volume = volumeRatio;
+        });
     }
 
     if (volumeSlider) {
         // 画面読み込み時の初期表示設定
         updateVolumeSlider(volumeSlider);
 
-        // スライダー操作時に緑色ゲージを即座に更新
+        // スライダー操作時に緑色ゲージと音量を即座に更新
         volumeSlider.addEventListener("input", function () {
             updateVolumeSlider(this);
         });
@@ -72,14 +80,24 @@ document.addEventListener("DOMContentLoaded", function () {
     // ==========================================
     // 8. サブモーダル（繰り返し・サウンド）の要素を先に定義
     // ==========================================
-    const soundTrigger = document.querySelector("#sound-select-trigger");
+    const soundTrigger = document.querySelector("#sound-select-trigger"); // アラーム追加側
+    const sleepSoundTrigger = document.querySelector("#sleep-sound-trigger"); // 睡眠側
+    const sleepPreviewText = document.querySelector("#sound-preview-text"); // 睡眠側のテキスト
     const soundModal = document.querySelector("#sound-modal");
     const btnSoundBack = document.querySelector("#btn-sound-back");
     const soundOptions = document.querySelectorAll("#sound-options-list li");
 
+    // アラーム追加側から開く
     if (soundTrigger && soundModal) {
         soundTrigger.addEventListener("click", () =>
             soundModal.classList.add("show"),
+        );
+    }
+
+    // 睡眠｜起床モーダルから開く
+    if (sleepSoundTrigger && soundModal) {
+        sleepSoundTrigger.addEventListener("click", () =>
+            soundModal.classList.add("show")
         );
     }
 
@@ -93,7 +111,10 @@ document.addEventListener("DOMContentLoaded", function () {
         option.addEventListener("click", function () {
             soundOptions.forEach((el) => el.classList.remove("selected"));
             this.classList.add("selected");
+            // アラーム追加側の表示更新
             if (soundTrigger) soundTrigger.textContent = this.textContent;
+            // 睡眠側の表示更新（例：「アラーム ＞」のように変更）
+            if (soundPreviewText) soundPreviewText.textContent = `${this.textContent} ＞`;
             if (soundModal) soundModal.classList.remove("show");
         });
     });

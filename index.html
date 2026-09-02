@@ -92,7 +92,7 @@
                 </div>
 
                 <div id="alarm-options-group">
-                    <div class="alarm-row click-row">
+                    <div class="alarm-row click-row" id="sleep-sound-trigger">
                         <span class="alarm-option-label">サウンドと触覚</span>
                         <div class="alarm-select-preview">
                             <span id="sound-preview-text">夜明け ＞</span>
@@ -107,7 +107,7 @@
                         <input type="range" id="alarm-volume-slider" min="0" max="100" value="100" class="alarm-range">
                     </div>
 
-                    <div class="modal-setting-item">
+                    <div class="alarm-row">
                         <span class="setting-label">スヌーズ</span>
                         <button id="btn-modal-snooze-sleep" class="ios-switch"></button>
                     </div>
@@ -198,23 +198,22 @@
                     </div>
                 </div>
             </div>
-
-            <!-- サウンドの設定モーダル -->
-            <div id="sound-modal" class="modal-overlay-sub">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button id="btn-sound-back" class="modal-btn back-btn">＜</button>
-                        <p class="modal-header-title">サウンド</p>
-                        <div style="width: 40px;"></div>
-                    </div>
-                    <div class="modal-settings-list">
-                        <ul id="sound-options-list" class="ios-full-options-list">
-                            <li data-value="sound-alarm" class="selected">アラーム</li>
-                            <li data-value="sound-push">☎️電話音</li>
-                            <li data-value="sound-bell">🔔鈴の音</li>
-                        </ul>
-                    </div>
-                </div>
+        </div>
+    </div>
+    <!-- サウンドの設定モーダル -->
+    <div id="sound-modal" class="modal-overlay-sub">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button id="btn-sound-back" class="modal-btn back-btn">＜</button>
+                <p class="modal-header-title">サウンド</p>
+                <div style="width: 40px;"></div>
+            </div>
+            <div class="modal-settings-list">
+                <ul id="sound-options-list" class="ios-full-options-list">
+                    <li data-value="sound-alarm" class="selected">アラーム</li>
+                    <li data-value="sound-push">☎️電話音</li>
+                    <li data-value="sound-bell">🔔鈴の音</li>
+                </ul>
             </div>
         </div>
     </div>
