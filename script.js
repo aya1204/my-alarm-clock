@@ -23,21 +23,21 @@ document.addEventListener("DOMContentLoaded", function () {
             this.classList.toggle("active");
 
             if (this.id.includes("btn-modal-snooze")) {
-            const parentModal = this.closest(".modal-content");
-            if (parentModal) {
-                const durationWrapper = parentModal.querySelector(
-                ".snooze-duration-wrapper",
-                );
-                if (durationWrapper) {
-                if (this.classList.contains("active")) {
-                    durationWrapper.style.opacity = "1";
-                    durationWrapper.style.pointerEvents = "auto";
-                } else {
-                    durationWrapper.style.opacity = "0.4";
-                    durationWrapper.style.pointerEvents = "none";
+                const parentModal = this.closest(".modal-content");
+                if (parentModal) {
+                    const durationWrapper = parentModal.querySelector(
+                    ".snooze-duration-wrapper",
+                    );
+                    if (durationWrapper) {
+                    if (this.classList.contains("active")) {
+                        durationWrapper.style.opacity = "1";
+                        durationWrapper.style.pointerEvents = "auto";
+                    } else {
+                        durationWrapper.style.opacity = "0.4";
+                        durationWrapper.style.pointerEvents = "none";
+                    }
+                    }
                 }
-                }
-            }
             }
         });
     }
@@ -78,7 +78,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     // ==========================================
-    // 8. サブモーダル（繰り返し・サウンド）の要素を先に定義
+    // 4. サウンド選択モーダルの処理
     // ==========================================
     const soundTrigger = document.querySelector("#sound-select-trigger"); // アラーム追加側
     const sleepSoundTrigger = document.querySelector("#sleep-sound-trigger"); // 睡眠側
@@ -87,18 +87,23 @@ document.addEventListener("DOMContentLoaded", function () {
     const btnSoundBack = document.querySelector("#btn-sound-back");
     const soundOptions = document.querySelectorAll("#sound-options-list li");
 
+    // 触覚セクションの取得
+    const hapticsSection = document.querySelector("#haptics-section");
+
     // アラーム追加側から開く
     if (soundTrigger && soundModal) {
-        soundTrigger.addEventListener("click", () =>
-            soundModal.classList.add("show"),
-        );
+        soundTrigger.addEventListener("click", () => {
+            if (hapticsSection) hapticsSection.style.display = "none"; // 触覚の選択する行を隠す
+            soundModal.classList.add("show");
+        });
     }
 
     // 睡眠｜起床モーダルから開く
     if (sleepSoundTrigger && soundModal) {
-        sleepSoundTrigger.addEventListener("click", () =>
-            soundModal.classList.add("show")
-        );
+        sleepSoundTrigger.addEventListener("click", () => {
+            if (hapticsSection) hapticsSection.style.display = "block"; // 触覚を選択する行を表示
+            soundModal.classList.add("show");
+        });
     }
 
     if (btnSoundBack && soundModal) {
@@ -120,7 +125,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     // ==========================================
-    // 4. アラーム項目のタップ（編集モード時モーダルを開く）
+    // 5. アラーム項目のタップ（編集モード時モーダルを開く）
     // ==========================================
     const addModal = document.querySelector("#add-modal");
     const modalTitle = document.querySelector("#modal-title-text");
@@ -177,7 +182,7 @@ document.addEventListener("DOMContentLoaded", function () {
     .forEach(bindItemClickEvent);
 
     // ==========================================
-    // 5. アラームの新規追加 & 編集保存処理 (✔︎ボタン)
+    // 6. アラームの新規追加 & 編集保存処理 (✔︎ボタン)
     // ==========================================
     const btnModalCheck = document.querySelector("#btn-modal-check");
     const otherAlarmList = document.querySelector("#other-alarm-list");
@@ -238,7 +243,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     // ==========================================
-    // 6. アラームの削除処理 (削除ボタン)
+    // 　7. アラームの削除処理 (削除ボタン)
     // ==========================================
     const btnDeleteAlarm = document.querySelector("#btn-delete-alarm");
     if (btnDeleteAlarm) {
@@ -252,7 +257,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     // ==========================================
-    // 7. モーダルの開閉処理（睡眠・追加）
+    // 8. モーダルの開閉処理（睡眠・追加）
     // ==========================================
     const sleepModal = document.querySelector("#sleep-modal");
 
@@ -311,7 +316,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     // ==========================================
-    // 8. その他のサブモーダル（繰り返し）の処理
+    // 9. 繰り返し選択モーダルの処理
     // ==========================================
     const repeatTrigger = document.querySelector("#repeat-select-trigger");
     const repeatModal = document.querySelector("#repeat-modal");
@@ -345,7 +350,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     // ==========================================
-    // 9. スヌーズ時間ホイールピッカーの初期化
+    // 10. スヌーズ時間ホイールピッカーの初期化
     // ==========================================
     function setupSnoozePicker(containerElement) {
     if (!containerElement) return;
@@ -420,5 +425,47 @@ document.addEventListener("DOMContentLoaded", function () {
 
     document.querySelectorAll(".snooze-duration-wrapper").forEach((wrapper) => {
         setupSnoozePicker(wrapper);
+    });
+
+    // ==========================================
+    // 11. 触覚選択モーダルの処理
+    // ==========================================
+    const hapticsTrigger = document.querySelector("#haptics-section .modal-row");
+    const hapticsModal = document.querySelector("#haptics-modal");
+    const btnHapticsBack = document.querySelector("#btn-haptics-back");
+    const hapticsPreviewText = document.querySelector("#haptics-preview-text");
+    const hapticsOptions = document.querySelectorAll("#haptics-options-list li");
+
+    // 「触覚」行をクリックしたら触覚モーダルを開く
+    if (hapticsTrigger && hapticsModal) {
+        hapticsTrigger.addEventListener("click", () => {
+            hapticsModal.classList.add("show");
+        });
+    }
+
+    // 「＜」ボタンで触覚モーダルを閉じる
+    if (btnHapticsBack && hapticsModal) {
+        btnHapticsBack.addEventListener("click", () => {
+            hapticsModal.classList.remove("show");
+        });
+    }
+
+    // 触覚を選択した時の処理
+    hapticsOptions.forEach((option) => {
+        option.addEventListener("click", function () {
+            // 選択状態（selectedクラス）の付け替え
+            hapticsOptions.forEach((el) => el.classList.remove("selected"));
+            this.classList.add("selected");
+
+            // 表示テキストの更新（例：　「S.O.S.」）
+            if (hapticsPreviewText) {
+                hapticsPreviewText.textContent = `${this.textContent} ＞`;
+            }
+
+            // 触覚モーダルを閉じる
+            if (hapticsModal) {
+                hapticsModal.classList.remove("show");
+            }
         });
     });
+});

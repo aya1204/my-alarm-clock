@@ -208,6 +208,13 @@
                 <p class="modal-header-title">サウンド</p>
                 <div style="width: 40px;"></div>
             </div>
+            <!-- 触覚（バイブレーション）選択エリア -->
+            <div id="haptics-section" class="modal-section" style="display: none;">
+                <div class="modal-row arrow-link">
+                    <span class="row-label">触覚</span>
+                    <span id="haptics-preview-text" class="row-value">同期 ＞</span>
+                </div>
+            </div>
             <div class="modal-settings-list">
                 <ul id="sound-options-list" class="ios-full-options-list">
                     <li data-value="sound-alarm" class="selected">アラーム</li>
@@ -215,6 +222,41 @@
                     <li data-value="sound-bell">🔔鈴の音</li>
                 </ul>
             </div>
+        </div>
+    </div>
+    <!-- 触覚の設定モーダル -->
+    <div id="haptics-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button id="btn-haptics-back" class="btn-back">＜</button>
+                <p class="modal-header-title">触覚</p>
+                <div style="width: 40px;;"></div>
+            </div>
+            <p class="list-title">標準</p>
+            <div class="modal-settings-list">
+                <ul id="haptics-options-list" class="ios-full-options-list">
+                    <li class="selected">同期（デフォルト）</li>
+                    <li>S.O.S.</li>
+                    <li>アクセント</li>
+                    <li>クイック</li>
+                    <li>スタッカート</li>
+                    <li>ラピッド</li>
+                    <li>警告</li>
+                    <li>交響曲</li>
+                    <li>心臓の鼓動</li>
+                </ul>
+            </div>
+            <p class="list-title">カスタム</p>
+            <div class="modal-settings-list" style="margin-top: 20px;">
+                <ul class="ios-full-options-list">
+                    <li>新規バイブレーションを作成</li>
+                </ul>
+            </div>
+            <div class="modal-settings-list" style="margin-top: 20px;">
+            <ul class="ios-full-options-list">
+                <li>なし</li>
+            </ul>
+        </div>
         </div>
     </div>
     <script src="script.js"></script>
