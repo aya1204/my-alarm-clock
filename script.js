@@ -17,33 +17,60 @@ document.addEventListener("DOMContentLoaded", function () {
     // ==========================================
     // 2. スイッチ（ON/OFF）バインド関数
     // ==========================================
+
+    // スヌーズ状態に応じた継続時間表示切り替え
+    function updateSnoozeDisplay(snoozeSwitch) {
+        const parentModal = snoozeSwitch.closest(".modal-content");
+        if (!parentModal) return;
+        const durationWrapper = parentModal.querySelector(".snooze-duration-wrapper");
+        if (durationWrapper) {
+            if (snoozeSwitch.classList.contains("active")) {
+                durationWrapper.style.display = "block";
+            } else {
+                durationWrapper.style.display = "none";
+            }
+        }
+    }
+
+    // アラームスイッチ状態に応じたオプションカード表示切り替え
+    function updateAlarmOptionsDisplay(alarmSwitch) {
+        const optionsGroup = document.querySelector("#alarm-options-group");
+        if (optionsGroup) {
+            if (alarmSwitch.classList.contains("active")) {
+                optionsGroup.style.display = "block";
+            } else {
+                optionsGroup.style.display = "none";
+            }
+        }
+    }
+
     function bindSwitchEvent(sw) {
         sw.addEventListener("click", function (e) {
             e.stopPropagation(); // 行全体のクリックイベント発火を防ぐ
             this.classList.toggle("active");
 
+            // スヌーズスイッチの変更時
             if (this.id.includes("btn-modal-snooze")) {
-                const parentModal = this.closest(".modal-content");
-                if (parentModal) {
-                    const durationWrapper = parentModal.querySelector(
-                    ".snooze-duration-wrapper",
-                    );
-                    if (durationWrapper) {
-                    if (this.classList.contains("active")) {
-                        durationWrapper.style.opacity = "1";
-                        durationWrapper.style.pointerEvents = "auto";
-                    } else {
-                        durationWrapper.style.opacity = "0.4";
-                        durationWrapper.style.pointerEvents = "none";
-                    }
-                    }
-                }
+                updateSnoozeDisplay(this);
+            }
+
+            // 睡眠モーダルのメインアラームスイッチ変更時
+            if (this.id === "alarm-toggle") {
+                updateAlarmOptionsDisplay(this);
             }
         });
     }
 
     // 既存スイッチにイベント付与
     document.querySelectorAll(".ios-switch").forEach(bindSwitchEvent);
+
+    // 初期状態の表示適用
+    const alarmToggle = document.querySelector("#alarm-toggle");
+    if (alarmToggle) updateAlarmOptionsDisplay(alarmToggle);
+
+    document.querySelectorAll(".ios-switch[id*='btn-modal-snooze']").forEach(sw => {
+        updateSnoozeDisplay(sw);
+    });
 
     // ==========================================
     // 3. 音量スライダーの緑色ゲージ（背景）＆実際の音量更新処理

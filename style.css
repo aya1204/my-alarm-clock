@@ -192,7 +192,7 @@ input[type="time"]::-webkit-calendar-picker-indicator {
 
 /* ポップアップの中身のボックス */
 .modal-content {
-    background-color: #2c2c2e;
+    background-color: #1c1c1e;
     width: 320px;
     padding: 20px;
     border-radius: 14px;
@@ -281,6 +281,8 @@ input[type="time"]::-webkit-calendar-picker-indicator {
 
 .modal-setting-item:last-child {
     border-bottom: none;
+    display: flex;
+    flex-direction: column;
 }
 
 /* 左側のラベル文字 */
@@ -487,27 +489,42 @@ input[type="time"]::-webkit-calendar-picker-indicator {
 
 /* 睡眠モーダル用カード等 */
 .alarm-section-title {
-    font-size: 13px;
-    color: #8e8e93;
+    font-size: 20px;
     text-transform: uppercase;
     margin: 16px 8px 6px 8px;
     text-align: left;
 }
 
+/* ------------------------------------------
+    アラームカード（単独・グループ共通設定）
+------------------------------------------ */
+/* アラーム */
 .alarm-card {
-    background: #1c1c1e;
-    border-radius: 12px;
+    background: #3c3c3e;
+    border-radius: 33px;
     overflow: hidden;
     margin-bottom: 12px;
+    padding: 0 15px;
+}
+
+/* サウンドと触覚〜スヌーズ */
+.alarm-card-m {
+    background: #3c3c3e;
+    border-radius: 15px;
+    overflow: hidden;
+    margin-bottom: 12px;
+    padding: 0 15px;
 }
 
 .alarm-row {
+    width: 100%;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 12px 16px;
+    padding: 12px 0;
     border-bottom: 0.5px solid #38383a;
     min-height: 44px;
+    background-color: #3a3a3c;
 }
 
 .alarm-row:last-child {
@@ -594,12 +611,12 @@ input[type="time"]::-webkit-calendar-picker-indicator {
 
 /* モーダルコンテンツの表示 */
 .modal-content {
-    background-color: #1c1c1e;
-    border-radius: 14px;
+    /* background-color: #3c3c3e; */
+    /* border-radius: 33px;
     width: 90%;
     max-width: 400px;
     padding: 20px;
-    box-sizing: border-box;
+    box-shadow: none; */
 }
 
 /* 触覚モーダルをサウンドモーダルのさらに上に重ねる */
@@ -658,4 +675,81 @@ input[type="time"]::-webkit-calendar-picker-indicator {
 #haptics-section .row-value {
     font-size: 16px;
     color: #8e8e93
+}
+
+/* 睡眠開始時間と起床時間の文字、背景 */
+input#input-bed-time,
+input#input-wake-time {
+    font-size: 16px;
+    font-weight: bold;
+    background-color: #3c3c3e;
+    color: #ffffff;
+    border: none;
+}
+
+/* "ヘルスケア"で睡眠スケジュールを編集 */
+.modal-link-text {
+    color: #ff9f0a;
+    white-space: nowrap;
+}
+
+/* 睡眠スケジュールのグループ */
+.sleep-schedule {
+    background-color: #3a3a3c;
+    padding: 0px 15px;
+    border-radius: 15px;
+}
+
+.modal-content.link-card {
+    background-color: #3c3c3e;
+    border-radius: 33px;
+    width: fit-content;
+    margin: 10px 0;
+}
+
+/* サウンド〜スヌーズの継続時間までのグループ */
+div#alarm-options-group {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 0.5px solid #38383a;
+    min-height: 44px;
+    background-color: #3a3a3c;
+}
+
+div#alarm-options-group:last-child {
+    border-bottom: none;
+}
+
+div#alarm-options-group.column {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+}
+
+.alarm-row-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* 就寝時刻と起床時刻、睡眠時間の合計 */
+input#input-bed-time,
+input#input-wake-time,
+.modal-sleep-duration {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+/* 起床時刻、就寝時刻
+    このスケジュールは睡眠目標を満たしています。
+    Apple Watchを装着して就寝すると、アラームはWatchで再生されます。 */
+.alarm-settings-label,
+.sleep-date,
+.wake-date,
+.sleep-time-check,
+.sleep-wake-text {
+    font-size: 13px;
+    color: #9c9c9e;
 }

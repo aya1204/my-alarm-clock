@@ -64,17 +64,22 @@
                 <h3 id="sleep-modal-title">起床時を変更</h3>
                 <button id="btn-sleep-check" class="modal-btn check">✔︎</button>
             </div>
-            <div class="modal-settingslist">
-                <div class="modal-setting-item">
-                    <span class="setting-label">🛌就寝時刻</span>
-                    <input type="time" id="input-bed-time" value="23:00">
-                </div>
-                <div class="modal-setting-item">
-                    <span class="setting-label">⏰起床時刻</span>
-                    <input type="time" id="input-wake-time" value="06:30">
-                </div>
-                <div class="modal-setting-item">
-                    <span class="modal-sleep-duration">7時間30分</span>
+            <div class="sleep-schedule">
+                <div class="modal-settingslist">
+                    <div class="modal-setting-item">
+                        <span class="alarm-settings-label">🛌就寝時刻</span>
+                        <input type="time" id="input-bed-time" value="23:00">
+                        <p class="sleep-date">今夜</p>
+                    </div>
+                    <div class="modal-setting-item">
+                        <span class="alarm-settings-label">⏰起床時刻</span>
+                        <input type="time" id="input-wake-time" value="06:30">
+                        <span class="wake-date">明日</span>
+                    </div>
+                    <div class="modal-setting-item">
+                        <span class="modal-sleep-duration">7時間30分</span>
+                        <p class="sleep-time-check">このスケジュールは睡眠目標を満たしています。</p>
+                    </div>
                 </div>
             </div>
 
@@ -90,39 +95,40 @@
                     <span class="alarm-option-label">アラーム</span>
                     <button id="alarm-toggle" class="ios-switch active"></button>
                 </div>
+            </div>
 
-                <div id="alarm-options-group">
-                    <div class="alarm-row click-row" id="sleep-sound-trigger">
-                        <span class="alarm-option-label">サウンドと触覚</span>
-                        <div class="alarm-select-preview">
-                            <span id="sound-preview-text">夜明け ＞</span>
-                        </div>
+            <div class="alarm-card-m" id="alarm-options-group">
+                <div class="alarm-row click-row" id="sleep-sound-trigger">
+                    <span class="alarm-option-label">サウンドと触覚</span>
+                    <div class="alarm-select-preview">
+                        <span id="sound-preview-text">夜明け ＞</span>
                     </div>
+                </div>
 
-                    <div class="alarm-row column">
-                        <div class="alarm-row-header">
-                            <span class="alarm-option-label">🔇</span>
-                            <span id="volume-value-text" class="sound-subtext">🔊</span>
-                        </div>
+                <div class="alarm-row column">
+                    <div class="alarm-row-header">
+                        <span class="alarm-option-label">🔇</span>
                         <input type="range" id="alarm-volume-slider" min="0" max="100" value="100" class="alarm-range">
+                        <span id="volume-value-text" class="sound-subtext">🔊</span>
                     </div>
+                </div>
 
-                    <div class="alarm-row">
-                        <span class="setting-label">スヌーズ</span>
-                        <button id="btn-modal-snooze-sleep" class="ios-switch"></button>
+                <div class="alarm-row">
+                    <span class="alarm-options-label">スヌーズ</span>
+                    <button id="btn-modal-snooze-sleep" class="ios-switch"></button>
+                </div>
+                <div class="snooze-duration-wrapper">
+                    <div class="snooze-duration-header">
+                        <span class="setting-label">スヌーズの継続時間</span>
+                        <span class="snooze-value-text">9分</span>
                     </div>
-                    <div class="snooze-duration-wrapper">
-                        <div class="snooze-duration-header">
-                            <span class="setting-label">スヌーズの継続時間</span>
-                            <span class="snooze-value-text">9分</span>
-                        </div>
-                        <div class="ios-picker-container">
-                            <div class="ios-picker-selection-bar"></div>
-                            <div class="ios-picker-wheel"></div>
-                        </div>
+                    <div class="ios-picker-container">
+                        <div class="ios-picker-selection-bar"></div>
+                        <div class="ios-picker-wheel"></div>
                     </div>
                 </div>
             </div>
+            <p class="sleep-wake-text">Apple Watchを装着して就寝すると、アラームはWatchで再生されます。</p>
         </div>
     </div>
 
