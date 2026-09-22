@@ -117,9 +117,13 @@ document.addEventListener("DOMContentLoaded", function () {
     // 触覚セクションの取得
     const hapticsSection = document.querySelector("#haptics-section");
 
+    // その他のアラームのモーダルか、睡眠｜起床モーダルか、どちらからサウンドモーダルを開いたか保持する変数
+    let currentSoundSource = "add";
+
     // アラーム追加側から開く
     if (soundTrigger && soundModal) {
         soundTrigger.addEventListener("click", () => {
+            currentSoundSource = "add";
             if (hapticsSection) hapticsSection.style.display = "none"; // 触覚の選択する行を隠す
             soundModal.classList.add("show");
         });
@@ -128,6 +132,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // 睡眠｜起床モーダルから開く
     if (sleepSoundTrigger && soundModal) {
         sleepSoundTrigger.addEventListener("click", () => {
+            currentSoundSource = "sleep"; // ソースを睡眠側にセット
             if (hapticsSection) hapticsSection.style.display = "block"; // 触覚を選択する行を表示
             soundModal.classList.add("show");
         });
@@ -143,10 +148,18 @@ document.addEventListener("DOMContentLoaded", function () {
         option.addEventListener("click", function () {
             soundOptions.forEach((el) => el.classList.remove("selected"));
             this.classList.add("selected");
-            // アラーム追加側の表示更新
-            if (soundTrigger) soundTrigger.textContent = this.textContent;
+
+            // どこから開かれたかによって更新対象を切り分ける
+            if (currentSoundSource === "sleep") {
+                // 睡眠側の表示更新（例：「アラーム　＞」や「電話音　＞」）
+                if (sleepPreviewText) {
+                    sleepPreviewText.textContent = `${this.textContent} ＞`;
+                }
+            } else {
+                // アラーム追加側の表示更新
+                if (soundTrigger) soundTrigger.textContent = this.textContent;
+            }
             // 睡眠側の表示更新（例：「アラーム ＞」のように変更）
-            if (soundPreviewText) soundPreviewText.textContent = `${this.textContent} ＞`;
             if (soundModal) soundModal.classList.remove("show");
         });
     });
